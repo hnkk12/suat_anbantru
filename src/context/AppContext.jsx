@@ -11,6 +11,8 @@ import {
   seedEvaluations,
   seedDocuments,
   seedRegistrations,
+  seedParentEvaluations,
+  DEFAULT_MEAL_PRICE,
 } from '../data/mockData'
 
 const AppContext = createContext(null)
@@ -30,9 +32,11 @@ export function AppProvider({ children }) {
   const [managerInfo, setManagerInfo] = useLocalStorageState('managerInfo', seedManagerInfo)
   const [companies, setCompanies] = useLocalStorageState('companies', seedCompanies)
   const [menu, setMenu] = useLocalStorageState('menu', seedMenu)
+  const [menuDetails, setMenuDetails] = useLocalStorageState('menuDetails', {})
   const [evaluations, setEvaluations] = useLocalStorageState('evaluations', seedEvaluations)
   const [documents, setDocuments] = useLocalStorageState('documents', seedDocuments)
   const [registrations, setRegistrations] = useLocalStorageState('registrations', seedRegistrations)
+  const [parentEvaluations, setParentEvaluations] = useLocalStorageState('parentEvaluations', seedParentEvaluations)
 
   const addStudent = (data) => setStudents((prev) => [...prev, { id: uid('s'), ...data }])
   const updateStudent = (id, data) => setStudents((prev) => prev.map((s) => (s.id === id ? { ...s, ...data } : s)))
@@ -52,6 +56,8 @@ export function AppProvider({ children }) {
 
   const updateMenuCell = (day, meal, value) =>
     setMenu((prev) => ({ ...prev, [day]: { ...prev[day], [meal]: value } }))
+  const updateMenuDetails = (day, meal, detail) =>
+    setMenuDetails((prev) => ({ ...prev, [`${day}::${meal}`]: detail }))
 
   const addEvaluation = (data) => setEvaluations((prev) => [{ id: uid('e'), ...data }, ...prev])
   const removeEvaluation = (id) => setEvaluations((prev) => prev.filter((e) => e.id !== id))
@@ -88,10 +94,12 @@ export function AppProvider({ children }) {
     teachers, addTeacher, updateTeacher, removeTeacher,
     managerInfo, setManagerInfo,
     companies, addCompany, updateCompany, removeCompany,
-    menu, updateMenuCell,
+    menu, updateMenuCell, menuDetails, updateMenuDetails,
     evaluations, addEvaluation, removeEvaluation,
     documents, addDocument, removeDocument,
     registrations, addRegistration,
+    parentEvaluations, setParentEvaluations,
+    mealPrice: DEFAULT_MEAL_PRICE,
     stats,
   }
 

@@ -66,7 +66,7 @@ export const seedCompanies = [
 ]
 
 export const DAYS_OF_WEEK = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6']
-export const MEALS = ['Bữa sáng', 'Bữa trưa', 'Bữa xế']
+export const MEALS = ['Bữa sáng', 'Bữa trưa', 'Bữa chiều', 'Bữa xế']
 
 export const seedMenu = {
   'Thứ 2': { 'Bữa sáng': 'Cháo thịt bằm, sữa tươi', 'Bữa trưa': 'Cơm, thịt kho trứng, canh bí đỏ', 'Bữa xế': 'Sữa chua, trái cây' },
@@ -82,6 +82,19 @@ export const seedEvaluations = [
   { id: 'e1', hocSinhId: 's1', ngay: '2026-09-08', anUong: 'Tốt', nguNghi: 'Tốt', yThuc: 'Tốt', nhanXet: 'Bé ăn hết suất, ngủ ngoan.' },
   { id: 'e2', hocSinhId: 's2', ngay: '2026-09-08', anUong: 'Khá', nguNghi: 'Tốt', yThuc: 'Khá', nhanXet: 'Bé ăn hơi chậm nhưng hết suất.' },
   { id: 'e3', hocSinhId: 's3', ngay: '2026-09-08', anUong: 'Cần cải thiện', nguNghi: 'Khá', yThuc: 'Tốt', nhanXet: 'Bé kén ăn rau.' },
+  { id: 'e4', hocSinhId: 's1', ngay: '2026-09-09', anUong: 'Tốt', nguNghi: 'Tốt', yThuc: 'Tốt', nhanXet: 'Bé ăn hết phần cơm và canh bí đỏ, ngủ đúng giờ.' },
+  { id: 'e5', hocSinhId: 's2', ngay: '2026-09-09', anUong: 'Tốt', nguNghi: 'Tốt', yThuc: 'Khá', nhanXet: 'Bé ăn nhanh, rất hợp khẩu vị thịt kho.' },
+  { id: 'e6', hocSinhId: 's3', ngay: '2026-09-09', anUong: 'Khá', nguNghi: 'Tốt', yThuc: 'Tốt', nhanXet: 'Bé đã tiến bộ hơn trong việc ăn canh.' },
+]
+
+export const DEFAULT_MEAL_PRICE = 35000
+
+export const seedParentEvaluations = [
+  { id: 'pe1', phuHuynh: 'Trần Văn Cường', hocSinh: 'Trần Bảo Châu', lop: '2A', ngay: '2026-09-09', rating: 5, noiDung: 'Bé rất thích món canh bí đỏ và thịt kho trưa nay. Đánh giá cao vệ sinh khay ăn.' },
+  { id: 'pe2', phuHuynh: 'Lê Thị Dung', hocSinh: 'Lê Gia Hân', lop: 'Lá 1', ngay: '2026-09-09', rating: 5, noiDung: 'Thực đơn phong phú, bé ăn hết suất và được cô giáo chăm sóc chu đáo.' },
+  { id: 'pe3', phuHuynh: 'Nguyễn Văn Bình', hocSinh: 'Nguyễn Minh An', lop: '1A', ngay: '2026-09-09', rating: 4, noiDung: 'Món ăn ngon và đủ chất. Mong nhà trường tiếp tục duy trì hoa quả tươi cho bữa xế.' },
+  { id: 'pe4', phuHuynh: 'Phạm Văn Em', hocSinh: 'Phạm Đức Huy', lop: 'Lá 2', ngay: '2026-09-08', rating: 5, noiDung: 'Bé khen cơm trường ngon hơn cơm mẹ nấu, rất yên tâm khi gửi gắm con.' },
+  { id: 'pe5', phuHuynh: 'Hoàng Thị Yến', hocSinh: 'Nguyễn Minh An', lop: '1A', ngay: '2026-09-07', rating: 3, noiDung: 'Bữa trưa hôm nay hơi mặn một chút đối với các bé khối 1, mong nhà bếp lưu ý gia vị.' },
 ]
 
 export const seedDocuments = [
