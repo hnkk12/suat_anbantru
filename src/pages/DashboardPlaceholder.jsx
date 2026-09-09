@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { useApp } from '../context/AppContext'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
+import SetupProgress from '../components/dashboard/SetupProgress'
 import OverviewStats from '../components/dashboard/OverviewStats'
 import AttendanceSummary from '../components/dashboard/AttendanceSummary'
 import TodayMenu from '../components/dashboard/TodayMenu'
@@ -63,6 +64,9 @@ export default function DashboardPlaceholder() {
         onDateChange={setSelectedDate}
         onResetToday={() => setSelectedDate('2026-09-09')}
       />
+
+      {/* 1.5. Tiến độ thiết lập hệ thống (kiểu Payroll setup progress) */}
+      <SetupProgress />
 
       {/* Thông báo lỗi nếu toàn trang gặp sự cố kết nối */}
       {hasError && (
@@ -128,10 +132,10 @@ export default function DashboardPlaceholder() {
                   <button
                     type="button"
                     onClick={() => setActiveRatingsTab('hoc-sinh')}
-                    className={`relative pb-3 text-xs sm:text-sm font-semibold transition-colors ${
+                    className={`relative pb-3 text-xs sm:text-sm transition-colors ${
                       activeRatingsTab === 'hoc-sinh'
-                        ? 'text-emerald-700 border-b-2 border-emerald-600'
-                        : 'text-slate-500 hover:text-slate-800'
+                        ? 'font-semibold text-gray-900 border-b-2 border-pink-600'
+                        : 'font-medium text-slate-500 hover:text-slate-800'
                     }`}
                   >
                     <span>Đánh giá học sinh</span>
@@ -141,17 +145,17 @@ export default function DashboardPlaceholder() {
                   <button
                     type="button"
                     onClick={() => setActiveRatingsTab('phu-huynh')}
-                    className={`relative pb-3 text-xs sm:text-sm font-semibold transition-colors ${
+                    className={`relative pb-3 text-xs sm:text-sm transition-colors ${
                       activeRatingsTab === 'phu-huynh'
-                        ? 'text-emerald-700 border-b-2 border-emerald-600'
-                        : 'text-slate-500 hover:text-slate-800'
+                        ? 'font-semibold text-gray-900 border-b-2 border-pink-600'
+                        : 'font-medium text-slate-500 hover:text-slate-800'
                     }`}
                   >
                     <span>Đánh giá phụ huynh</span>
                   </button>
                 </div>
 
-                <span className="hidden sm:inline-block text-[11px] font-medium text-slate-400">
+                <span className="hidden sm:inline-block text-xs font-medium text-slate-400">
                   Phản hồi bán trú
                 </span>
               </div>

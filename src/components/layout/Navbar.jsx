@@ -4,8 +4,8 @@ import {
   Menu,
   Bell,
   QrCode,
+  HelpCircle,
   ChevronDown,
-  UtensilsCrossed,
   CheckCircle2,
   AlertCircle,
   User,
@@ -64,34 +64,23 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
   ]
 
   return (
-    <header className="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white/95 backdrop-blur-sm">
+    <header className="sticky top-0 z-40 h-16 border-b border-gray-200 bg-white">
       <div className="flex h-full items-center justify-between px-4 sm:px-6">
-        {/* Left section: Hamburger button + Logo & App Name */}
+        {/* Left section: Hamburger button + Wordmark logo */}
         <div className="flex items-center gap-3 sm:gap-4">
           <button
             type="button"
             onClick={onToggleSidebar}
             aria-label="Ẩn / Hiện menu điều hướng"
-            className="flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 lg:hidden"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 focus:outline-none lg:hidden"
           >
             <Menu size={20} />
           </button>
 
-          <Link
-            to="/"
-            className="group flex items-center gap-2.5 transition-opacity hover:opacity-90"
-          >
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-600 text-white shadow-sm shadow-emerald-500/20 transition-transform group-hover:scale-105">
-              <UtensilsCrossed size={19} strokeWidth={2.2} />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-sm sm:text-base font-bold tracking-tight text-slate-900">
-                {schoolName}
-              </span>
-              <span className="hidden sm:inline-block text-[11px] font-medium text-emerald-700">
-                Hệ thống chuẩn hoá bữa ăn học đường
-              </span>
-            </div>
+          <Link to="/" className="flex items-center">
+            <span className="font-display text-xl sm:text-2xl font-semibold tracking-tight text-teal-900">
+              {schoolName}
+            </span>
           </Link>
         </div>
 
@@ -107,12 +96,12 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                 setUserDropdownOpen(false)
               }}
               aria-label="Thông báo"
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 ${
-                notificationOpen ? 'bg-slate-100 text-slate-900 ring-2 ring-emerald-500/20' : ''
+              className={`relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 ${
+                notificationOpen ? 'bg-gray-100 text-gray-900' : ''
               }`}
             >
               <Bell size={18} strokeWidth={1.9} />
-              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-[10px] font-semibold text-white ring-2 ring-white">
+              <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-rose-500 text-xs font-semibold text-white ring-2 ring-white">
                 2
               </span>
             </button>
@@ -122,13 +111,13 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                 <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2.5">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-slate-900">Thông báo mới</span>
-                    <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-[11px] font-medium text-emerald-700">
+                    <span className="rounded-full bg-teal-50 px-2 py-0.5 text-xs font-medium text-teal-700">
                       2 chưa đọc
                     </span>
                   </div>
                   <button
                     type="button"
-                    className="text-xs font-medium text-slate-500 hover:text-emerald-600"
+                    className="text-xs font-medium text-slate-500 hover:text-teal-600"
                   >
                     Đánh dấu đã đọc
                   </button>
@@ -139,12 +128,12 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                     <div
                       key={item.id}
                       className={`flex gap-3 p-3 transition-colors hover:bg-slate-50 rounded-xl ${
-                        item.unread ? 'bg-emerald-50/30' : ''
+                        item.unread ? 'bg-teal-50/30' : ''
                       }`}
                     >
                       <div className="mt-0.5 shrink-0">
                         {item.unread ? (
-                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                          <div className="flex h-7 w-7 items-center justify-center rounded-full bg-teal-100 text-teal-600">
                             <CheckCircle2 size={14} />
                           </div>
                         ) : (
@@ -156,7 +145,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                       <div className="flex-1 text-xs">
                         <p className="font-semibold text-slate-800">{item.title}</p>
                         <p className="mt-0.5 text-slate-500">{item.desc}</p>
-                        <p className="mt-1 text-[11px] text-slate-400">{item.time}</p>
+                        <p className="mt-1 text-xs text-slate-400">{item.time}</p>
                       </div>
                     </div>
                   ))}
@@ -166,7 +155,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                   <Link
                     to="/bao-cao"
                     onClick={() => setNotificationOpen(false)}
-                    className="block py-1.5 text-xs font-semibold text-emerald-700 hover:underline"
+                    className="block py-1.5 text-xs font-semibold text-teal-700 hover:underline"
                   >
                     Xem toàn bộ lịch sử hoạt động →
                   </Link>
@@ -186,8 +175,8 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
               }}
               aria-label="Mở mã QR điểm danh"
               title="Mã QR điểm danh"
-              className={`flex h-9 w-9 items-center justify-center rounded-lg border border-slate-200 text-slate-600 transition-colors hover:bg-slate-100 hover:text-slate-900 ${
-                qrOpen ? 'bg-slate-100 text-slate-900 ring-2 ring-emerald-500/20' : ''
+              className={`flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 ${
+                qrOpen ? 'bg-gray-100 text-gray-900' : ''
               }`}
             >
               <QrCode size={18} strokeWidth={1.9} />
@@ -204,7 +193,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                       onError={() => setQrImageUnavailable(true)}
                     />
                   ) : (
-                    <span className="px-3 text-center text-[11px] leading-relaxed text-slate-400">
+                    <span className="px-3 text-center text-xs leading-relaxed text-slate-400">
                       Thêm file<br /><b>public/qr-attendance.png</b>
                     </span>
                   )}
@@ -215,7 +204,14 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
             )}
           </div>
 
-          <div className="h-6 w-px bg-slate-200" />
+          <button
+            type="button"
+            title="Trợ giúp"
+            aria-label="Trợ giúp"
+            className="hidden h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 sm:flex"
+          >
+            <HelpCircle size={18} strokeWidth={1.9} />
+          </button>
 
           {/* User Profile Area: Avatar, Name, Role + Dropdown */}
           <div className="relative" ref={userRef}>
@@ -226,23 +222,22 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                 setNotificationOpen(false)
                 setQrOpen(false)
               }}
-              className="group flex items-center gap-2.5 rounded-xl border border-transparent p-1.5 transition-all hover:border-slate-200 hover:bg-slate-50 focus:outline-none"
+              className="group flex items-center gap-2.5 rounded-full p-1 pr-2 transition-colors hover:bg-gray-100 focus:outline-none"
             >
               {/* Avatar circle */}
-              <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 font-semibold text-white shadow-xs">
+              <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-teal-800 font-semibold text-white">
                 <span className="text-xs sm:text-sm">NK</span>
-                <span className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-white bg-emerald-500" />
               </div>
 
               {/* User text (Desktop) */}
               <div className="hidden text-left sm:block">
-                <p className="text-xs font-bold leading-none text-slate-900">Nam Khang Ha</p>
-                <p className="mt-1 text-[11px] leading-none text-slate-500">uit - Quản trị viên</p>
+                <p className="text-sm font-semibold leading-none text-gray-900">Nam Khang Ha</p>
+                <p className="mt-1 text-xs leading-none text-gray-500">uit</p>
               </div>
 
               <ChevronDown
-                size={14}
-                className={`text-slate-400 transition-transform duration-200 group-hover:text-slate-600 ${
+                size={16}
+                className={`text-gray-400 transition-transform duration-200 group-hover:text-gray-600 ${
                   userDropdownOpen ? 'rotate-180' : ''
                 }`}
               />
@@ -252,8 +247,8 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
               <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 text-xs">
                 <div className="border-b border-slate-100 px-3 py-2.5">
                   <p className="font-bold text-slate-900">Nam Khang Ha</p>
-                  <p className="text-slate-400 text-[11px]">namkhang@uit.edu.vn</p>
-                  <div className="mt-1.5 inline-flex items-center rounded-md bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+                  <p className="text-slate-400 text-xs">namkhang@uit.edu.vn</p>
+                  <div className="mt-1.5 inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700">
                     uit - Quản trị viên
                   </div>
                 </div>
@@ -262,7 +257,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                   <Link
                     to="/nguoi-phu-trach"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-emerald-700"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-teal-700"
                   >
                     <User size={15} className="text-slate-400" />
                     <span>Hồ sơ người phụ trách</span>
@@ -271,7 +266,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
                   <Link
                     to="/bao-cao"
                     onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-emerald-700"
+                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-teal-700"
                   >
                     <Settings size={15} className="text-slate-400" />
                     <span>Cấu hình báo cáo</span>

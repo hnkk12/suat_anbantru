@@ -99,8 +99,8 @@ export default function ParentRatings({
       {/* 1. Header điểm trung bình + Nút Xuất Excel */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-50 border border-amber-200 text-amber-700 shadow-2xs">
-            <span className="text-xl font-extrabold">{avgRating}</span>
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-900">
+            <span className="text-xl font-bold">{avgRating}</span>
           </div>
           <div>
             <div className="flex items-center gap-1">
@@ -110,7 +110,7 @@ export default function ParentRatings({
               </span>
               <span className="ml-1 text-xs font-bold text-slate-900">{avgRating}/5.0</span>
             </div>
-            <p className="mt-0.5 text-[11px] text-slate-500 font-medium">
+            <p className="mt-0.5 text-xs text-slate-500 font-medium">
               Dựa trên <span className="font-semibold text-slate-700">{total}</span> lượt phản hồi phụ huynh
             </p>
           </div>
@@ -120,7 +120,7 @@ export default function ParentRatings({
         <button
           type="button"
           onClick={handleExportExcel}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-emerald-700"
+          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-teal-700"
         >
           Xuất Excel
         </button>
@@ -137,7 +137,7 @@ export default function ParentRatings({
               onClick={() => setSelectedStar(star)}
               className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
                 isActive
-                  ? 'bg-emerald-600 font-semibold text-white shadow-2xs'
+                  ? 'bg-teal-600 font-semibold text-white shadow-2xs'
                   : 'bg-slate-100/70 text-slate-600 hover:bg-slate-200/60'
               }`}
             >
@@ -158,7 +158,7 @@ export default function ParentRatings({
               <div className="flex items-center justify-between">
                 <div>
                   <span className="font-bold text-slate-900">{item.phuHuynh}</span>
-                  <span className="text-slate-400 text-[11px]">
+                  <span className="text-slate-400 text-xs">
                     {' '}• Phụ huynh bé {item.hocSinh} ({item.lop})
                   </span>
                 </div>
@@ -168,7 +168,7 @@ export default function ParentRatings({
                 </div>
               </div>
               <p className="mt-1.5 text-slate-600 leading-relaxed">{item.noiDung}</p>
-              <div className="mt-1.5 text-[10px] text-slate-400">
+              <div className="mt-1.5 text-xs text-slate-400">
                 {formatDateVN(item.ngay)}
               </div>
             </div>

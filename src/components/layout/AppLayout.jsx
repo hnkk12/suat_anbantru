@@ -6,11 +6,11 @@ export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 antialiased flex flex-col">
+    <div className="min-h-screen bg-[#f7f7f5] text-gray-800 antialiased flex flex-col">
       {/* Top Navbar: cố định ở đỉnh */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
-        schoolName="Quản Lý Suất Ăn Bán Trú"
+        schoolName="bántrú"
       />
 
       {/* Main Layout Container (Sidebar + Content) */}

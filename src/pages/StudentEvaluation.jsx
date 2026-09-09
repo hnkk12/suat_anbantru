@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Star, Plus, Trash2 } from 'lucide-react'
+import { Plus, Trash2 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
 import Card from '../components/ui/Card'
@@ -33,8 +33,6 @@ export default function StudentEvaluation() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Quản trị"
-        eyebrowIcon={Star}
         title="Đánh giá học sinh"
         description="Ghi nhận đánh giá hằng ngày về ăn uống, ngủ nghỉ và ý thức của từng học sinh trong giờ bán trú."
         controls={

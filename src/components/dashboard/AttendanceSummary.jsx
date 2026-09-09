@@ -40,33 +40,9 @@ export default function AttendanceSummary({
   const sleepOnlyRate = total > 0 ? ((sleepOnly / total) * 100).toFixed(1) : 0
 
   const cards = [
-    {
-      id: 'ban-tru',
-      title: 'Bán trú',
-      count: boarding,
-      rate: `${boardingRate}%`,
-      cardStyle: 'border-emerald-200/80 bg-emerald-50/40 hover:bg-emerald-50/70 hover:border-emerald-300',
-      badgeStyle: 'bg-emerald-100/80 text-emerald-800',
-      textStyle: 'text-emerald-900',
-    },
-    {
-      id: 'khong-ban-tru',
-      title: 'Không bán trú',
-      count: nonBoarding,
-      rate: `${nonBoardingRate}%`,
-      cardStyle: 'border-amber-200/80 bg-amber-50/40 hover:bg-amber-50/70 hover:border-amber-300',
-      badgeStyle: 'bg-amber-100/80 text-amber-800',
-      textStyle: 'text-amber-900',
-    },
-    {
-      id: 'chi-ngu',
-      title: 'Chỉ ngủ bán trú',
-      count: sleepOnly,
-      rate: `${sleepOnlyRate}%`,
-      cardStyle: 'border-rose-200/80 bg-rose-50/30 hover:bg-rose-50/60 hover:border-rose-300',
-      badgeStyle: 'bg-rose-100/80 text-rose-800',
-      textStyle: 'text-rose-900',
-    },
+    { id: 'ban-tru', title: 'Bán trú', count: boarding, rate: `${boardingRate}%` },
+    { id: 'khong-ban-tru', title: 'Không bán trú', count: nonBoarding, rate: `${nonBoardingRate}%` },
+    { id: 'chi-ngu', title: 'Chỉ ngủ bán trú', count: sleepOnly, rate: `${sleepOnlyRate}%` },
   ]
 
   const handleCardClick = (_card) => {
@@ -94,24 +70,24 @@ export default function AttendanceSummary({
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleCardClick(item)
             }}
-            className={`group flex cursor-pointer items-center justify-between rounded-xl border p-4 shadow-xs transition-all ${item.cardStyle}`}
+            className="group flex cursor-pointer items-center justify-between rounded-xl border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300"
           >
             <div>
-              <span className="text-xs font-semibold text-slate-600">{item.title}</span>
+              <span className="text-xs font-medium text-gray-500">{item.title}</span>
               {loading ? (
-                <div className="mt-1 h-5 w-16 animate-pulse rounded bg-slate-200" />
+                <div className="mt-1 h-5 w-16 animate-pulse rounded bg-gray-100" />
               ) : (
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className={`text-xl font-extrabold ${item.textStyle}`}>
+                  <span className="text-xl font-bold text-gray-900">
                     {item.count}
                   </span>
-                  <span className="text-xs font-medium text-slate-500">học sinh</span>
+                  <span className="text-xs font-medium text-gray-400">học sinh</span>
                 </div>
               )}
             </div>
 
             <div>
-              <span className={`rounded-lg px-2.5 py-1 text-xs font-bold ${item.badgeStyle}`}>
+              <span className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
                 {loading ? '—' : item.rate}
               </span>
             </div>

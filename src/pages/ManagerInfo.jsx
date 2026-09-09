@@ -25,11 +25,11 @@ function validate(form) {
 function InfoItem({ icon: Icon, label, value }) {
   return (
     <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-50 text-emerald-700">
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700">
         <Icon size={18} />
       </span>
       <div className="min-w-0">
-        <p className="text-[11px] font-medium text-slate-500">{label}</p>
+        <p className="text-xs font-medium text-slate-500">{label}</p>
         <p className="mt-0.5 truncate text-sm font-semibold text-slate-900">{value || '—'}</p>
       </div>
     </div>
@@ -94,14 +94,12 @@ export default function ManagerInfo() {
   return (
     <div className="space-y-6">
       {toast && (
-        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-xl ${toast.ok ? 'bg-emerald-700' : 'bg-rose-700'}`}>
+        <div className={`fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-xl px-4 py-3 text-sm font-medium text-white shadow-xl ${toast.ok ? 'bg-teal-700' : 'bg-rose-700'}`}>
           {toast.ok && <CheckCircle2 size={16} />}{toast.text}
         </div>
       )}
 
       <PageHeader
-        eyebrow="Quản trị"
-        eyebrowIcon={UserRound}
         title="Thông tin người phụ trách"
         description="Thông tin liên hệ của người phụ trách công tác bán trú, dùng để phụ huynh và nhà cung cấp liên hệ khi cần."
       />
@@ -109,7 +107,7 @@ export default function ManagerInfo() {
       <section className="mx-auto max-w-4xl overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex flex-col gap-5 border-b border-slate-100 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-7">
           <div className="flex min-w-0 items-center gap-4">
-            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-emerald-50 text-xl font-bold text-emerald-700 ring-8 ring-emerald-50/60">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-full bg-teal-50 text-xl font-bold text-teal-700 ring-8 ring-teal-50/60">
               {initials}
             </div>
             <div className="min-w-0">

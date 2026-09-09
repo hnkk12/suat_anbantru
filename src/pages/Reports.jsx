@@ -1,6 +1,5 @@
 import { useMemo, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import { BarChart3, Users, UtensilsCrossed, TrendingUp } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
 import StatCard from '../components/layout/StatCard'
@@ -38,8 +37,6 @@ export default function Reports() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Báo cáo"
-        eyebrowIcon={BarChart3}
         title="Báo cáo bán trú"
         description="Tổng hợp số liệu học sinh, suất ăn và điểm danh bán trú theo thời gian."
         controls={
@@ -52,9 +49,9 @@ export default function Reports() {
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard icon={Users} label="Tổng học sinh" value={students.length} tone="green" />
-        <StatCard icon={UtensilsCrossed} label="Suất ăn / tuần (ước tính)" value={WEEK_DATA.reduce((a, b) => a + b.suat, 0)} tone="amber" />
-        <StatCard icon={TrendingUp} label="Lượt đánh giá đã ghi nhận" value={evaluations.length} tone="blue" />
+        <StatCard label="Tổng học sinh" value={students.length} />
+        <StatCard label="Suất ăn / tuần (ước tính)" value={WEEK_DATA.reduce((a, b) => a + b.suat, 0)} />
+        <StatCard label="Lượt đánh giá đã ghi nhận" value={evaluations.length} />
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
@@ -70,7 +67,7 @@ export default function Reports() {
                   <div key={d.day} className="flex flex-1 flex-col items-center gap-2">
                     <div className="flex h-40 w-full items-end justify-center">
                       <div
-                        className="w-8 rounded-t-md bg-green-500 sm:w-12"
+                        className="w-8 rounded-t-md bg-teal-500 sm:w-12"
                         style={{ height: `${(d.suat / maxSuat) * 100}%` }}
                         title={`${d.suat} suất`}
                       />

@@ -2,12 +2,6 @@ import { Link, useNavigate } from 'react-router-dom'
 import { formatDateVN, getDayOfWeekName } from '../../utils/dateUtils'
 import DashboardEmptyState from './DashboardEmptyState'
 
-const MEAL_TONES = {
-  'Bữa sáng': 'bg-amber-50 text-amber-800 border-amber-200/80',
-  'Bữa trưa': 'bg-emerald-50 text-emerald-800 border-emerald-200/80',
-  'Bữa xế': 'bg-teal-50 text-teal-800 border-teal-200/80',
-}
-
 export default function TodayMenu({
   date,
   menu = {},
@@ -60,7 +54,7 @@ export default function TodayMenu({
 
           <Link
             to="/thuc-don"
-            className="text-xs font-semibold text-emerald-700 hover:text-emerald-800 hover:underline"
+            className="text-xs font-semibold text-teal-700 hover:text-teal-800 hover:underline"
           >
             Xem thực đơn tuần
           </Link>
@@ -77,8 +71,6 @@ export default function TodayMenu({
           ) : hasMeals ? (
             <div className="space-y-3">
               {Object.entries(dayMenu).map(([mealType, mealContent]) => {
-                const tone = MEAL_TONES[mealType] || 'bg-slate-50 text-slate-700 border-slate-200'
-
                 // Tách các món ăn theo dấu phẩy
                 const dishList = mealContent
                   ? mealContent
@@ -94,10 +86,10 @@ export default function TodayMenu({
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
-                        <span className={`inline-block rounded-md border px-2.5 py-0.5 text-xs font-bold ${tone}`}>
+                        <span className="inline-block rounded-md border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
                           {mealType}
                         </span>
-                        <span className="text-[11px] font-medium text-slate-400">
+                        <span className="text-xs font-medium text-slate-400">
                           {dishList.length} món
                         </span>
                       </div>
@@ -136,7 +128,7 @@ export default function TodayMenu({
       {hasMeals && (
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
           <span>Tiêu chuẩn: Đảm bảo kiểm thực 3 bước</span>
-          <Link to="/thuc-don" className="font-semibold text-emerald-700 hover:underline">
+          <Link to="/thuc-don" className="font-semibold text-teal-700 hover:underline">
             Chỉnh sửa thực đơn
           </Link>
         </div>

@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  --font-display: 'Inter', system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+}
 
 :root {
   color-scheme: light;
@@ -6,16 +12,20 @@
 
 body {
   margin: 0;
-  background: #f8fafc;
-  font-family: system-ui, 'Segoe UI', Roboto, Arial, sans-serif;
+  background: #f7f7f5;
+  font-family: var(--font-sans);
   color: #1f2937;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 #root {
   min-height: 100vh;
 }
 
-input, select, textarea {
+input, select, textarea, button {
   font-family: inherit;
 }
 

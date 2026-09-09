@@ -82,20 +82,20 @@ export default function StudentRatings({
         </span>
         <div className="mt-2 grid grid-cols-2 gap-3">
           {/* Tích cực */}
-          <div className="rounded-xl border border-emerald-200/80 bg-emerald-50/40 p-3">
-            <span className="text-[11px] font-semibold text-emerald-800">Tích cực (Tốt / Khá)</span>
+          <div className="rounded-xl border border-gray-200 p-3">
+            <span className="text-xs font-medium text-gray-500">Tích cực (Tốt / Khá)</span>
             <div className="flex items-baseline gap-1.5 mt-1">
-              <span className="text-xl font-extrabold text-emerald-900">{positiveCount}</span>
-              <span className="text-xs font-bold text-emerald-700">({positiveRate}%)</span>
+              <span className="text-xl font-bold text-gray-900">{positiveCount}</span>
+              <span className="text-xs font-semibold text-gray-500">({positiveRate}%)</span>
             </div>
           </div>
 
           {/* Tiêu cực / Cần cải thiện */}
-          <div className="rounded-xl border border-amber-200/80 bg-amber-50/40 p-3">
-            <span className="text-[11px] font-semibold text-amber-800">Cần cải thiện (Kén ăn)</span>
+          <div className="rounded-xl border border-gray-200 p-3">
+            <span className="text-xs font-medium text-gray-500">Cần cải thiện (Kén ăn)</span>
             <div className="flex items-baseline gap-1.5 mt-1">
-              <span className="text-xl font-extrabold text-amber-900">{negativeCount}</span>
-              <span className="text-xs font-bold text-amber-700">({negativeRate}%)</span>
+              <span className="text-xl font-bold text-gray-900">{negativeCount}</span>
+              <span className="text-xs font-semibold text-gray-500">({negativeRate}%)</span>
             </div>
           </div>
         </div>
@@ -107,7 +107,7 @@ export default function StudentRatings({
           <span className="text-xs font-bold text-slate-800">
             Đánh giá món ăn chi tiết
           </span>
-          <span className="text-[10px] text-slate-400 font-medium">Mức độ ăn hết suất</span>
+          <span className="text-xs text-slate-400 font-medium">Mức độ ăn hết suất</span>
         </div>
 
         <div className="mt-3 space-y-2.5">
@@ -117,11 +117,11 @@ export default function StudentRatings({
                 <span className="font-medium text-slate-700 truncate max-w-[200px]">
                   {item.name}
                 </span>
-                <span className="font-bold text-emerald-700">{item.score}%</span>
+                <span className="font-bold text-teal-700">{item.score}%</span>
               </div>
               <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-200/80">
                 <div
-                  className="h-full rounded-full bg-emerald-600 transition-all duration-500"
+                  className="h-full rounded-full bg-teal-600 transition-all duration-500"
                   style={{ width: `${item.score}%` }}
                 />
               </div>

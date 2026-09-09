@@ -86,11 +86,11 @@ export default function OverviewStats({
               <div className="mt-2 flex items-center gap-2">
                 <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-slate-100">
                   <div
-                    className="h-full rounded-full bg-emerald-600 transition-all duration-500"
+                    className="h-full rounded-full bg-teal-600 transition-all duration-500"
                     style={{ width: `${Math.min(100, Math.max(0, card.percentage))}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-semibold text-slate-400">Mục tiêu 80%</span>
+                <span className="text-xs font-semibold text-slate-400">Mục tiêu 80%</span>
               </div>
             )}
           </div>

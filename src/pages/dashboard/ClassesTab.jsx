@@ -55,7 +55,7 @@ export default function ClassesTab() {
                 <h4 className="mt-1 text-lg font-bold text-gray-900">{c.name}</h4>
               </div>
               <div className="flex items-center gap-1">
-                <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-green-600">
+                <button onClick={() => openEdit(c)} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-teal-600">
                   <Pencil size={15} />
                 </button>
                 <button onClick={() => removeClass(c.id)} className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600">

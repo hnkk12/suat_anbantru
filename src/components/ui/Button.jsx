@@ -1,5 +1,5 @@
 const VARIANTS = {
-  primary: 'bg-green-600 text-white hover:bg-green-700 shadow-sm',
+  primary: 'bg-teal-900 text-white hover:bg-teal-950 shadow-sm',
   secondary: 'bg-white text-gray-700 border border-gray-300 hover:bg-gray-50',
   danger: 'bg-white text-red-600 border border-red-200 hover:bg-red-50',
   ghost: 'text-gray-500 hover:bg-gray-100',
@@ -8,7 +8,7 @@ const VARIANTS = {
 const SIZES = {
   sm: 'px-3 py-1.5 text-xs',
   md: 'px-4 py-2 text-sm',
-  lg: 'px-5 py-2.5 text-sm',
+  lg: 'px-5 py-2.5 text-sm font-semibold',
 }
 
 export default function Button({

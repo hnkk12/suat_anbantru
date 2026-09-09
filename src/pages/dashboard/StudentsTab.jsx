@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { ArrowUpDown, Filter, Pencil, Plus, Trash2 } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
@@ -51,23 +51,44 @@ export default function StudentsTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-gray-500">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <span className="text-sm text-gray-500">
           Hiển thị <span className="font-semibold text-gray-700">{filtered.length}</span> / {students.length} học sinh
-        </p>
+        </span>
         <Button onClick={openAdd}>
           <Plus size={16} />
           Thêm học sinh
         </Button>
       </div>
 
-      <div className="overflow-x-auto rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div className="flex items-center justify-between gap-3">
+        <label className="flex items-center gap-2 text-sm text-gray-600">
+          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-teal-800 focus:ring-teal-700" />
+          Chọn tất cả
+        </label>
+        <button
+          type="button"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
+        >
+          <Filter size={14} />
+          Lọc
+        </button>
+      </div>
+
+      <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white shadow-sm">
         <table className="min-w-full divide-y divide-gray-100 text-sm">
           <thead className="bg-gray-50">
             <tr>
-              {['#', 'Họ và tên', 'Lớp', 'Ngày sinh', 'Phụ huynh', 'SĐT', 'Trạng thái bán trú', ''].map((h) => (
-                <th key={h} className="px-4 py-3 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  {h}
+              {['#', 'Họ và tên', 'Lớp', 'Ngày sinh', 'Phụ huynh', 'SĐT', 'Trạng thái bán trú', ''].map((h, idx) => (
+                <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500">
+                  {h ? (
+                    <span className="inline-flex items-center gap-1">
+                      {h}
+                      {idx > 0 && idx < 7 && <ArrowUpDown size={12} className="text-gray-300" />}
+                    </span>
+                  ) : (
+                    h
+                  )}
                 </th>
               ))}
             </tr>
@@ -86,7 +107,7 @@ export default function StudentsTab() {
                 </td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-1">
-                    <button onClick={() => openEdit(s)} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-green-600">
+                    <button onClick={() => openEdit(s)} className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-teal-600">
                       <Pencil size={15} />
                     </button>
                     <button onClick={() => removeStudent(s.id)} className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600">
@@ -98,8 +119,9 @@ export default function StudentsTab() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-10 text-center text-sm text-gray-400">
-                  Không tìm thấy học sinh phù hợp.
+                <td colSpan={8} className="px-4 py-16 text-center">
+                  <p className="text-sm font-semibold text-gray-900">Không tìm thấy học sinh</p>
+                  <p className="mt-1 text-sm text-gray-500">Thử thay đổi từ khoá tìm kiếm hoặc bộ lọc.</p>
                 </td>
               </tr>
             )}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Search, Users, UtensilsCrossed, Layers, CalendarCheck2, ClipboardCheck, Moon, UserX } from 'lucide-react'
+import { Search } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
 import StatCard from '../components/layout/StatCard'
@@ -22,8 +22,6 @@ export default function Dashboard() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Quản lý học sinh"
-        eyebrowIcon={Users}
         title="Danh sách theo năm học"
         description="Chọn năm học trước, sau đó dùng các tab bên dưới để thao tác đúng: học sinh, lớp học, hoặc tài khoản giáo viên."
         controls={
@@ -40,7 +38,7 @@ export default function Dashboard() {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="Tên, lớp, SĐT, email..."
-                className="w-56 rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-100"
+                className="w-56 rounded-lg border border-gray-300 py-2 pl-9 pr-3 text-sm focus:border-teal-500 focus:outline-none focus:ring-2 focus:ring-teal-100"
               />
             </div>
           </>
@@ -48,20 +46,17 @@ export default function Dashboard() {
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={Users} label="Tổng học sinh" value={stats.tongHocSinh} tone="green" />
-        <StatCard icon={UtensilsCrossed} label="Tổng suất bán trú" value={stats.tongSuatBanTru} unit="suất" hint={`Ngày ${selectedDate}`} tone="amber" />
-        <StatCard icon={Layers} label="Số lớp" value={stats.soLop} tone="blue" />
-        <div className="rounded-xl border border-green-200 bg-green-50 p-5 shadow-sm">
-          <p className="text-xs font-semibold uppercase tracking-wide text-green-600">Năm học đang chọn</p>
-          <p className="mt-2 text-xl font-bold text-green-800">Năm học {schoolYear}</p>
-        </div>
+        <StatCard label="Tổng học sinh" value={stats.tongHocSinh} />
+        <StatCard label="Tổng suất bán trú" value={stats.tongSuatBanTru} unit="suất" hint={`Ngày ${selectedDate}`} />
+        <StatCard label="Số lớp" value={stats.soLop} />
+        <StatCard label="Năm học đang chọn" value={schoolYear} />
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard icon={CalendarCheck2} label="Đã điểm danh" value={`${stats.daDiemDanh} / ${stats.tongHocSinh}`} hint={`Ngày ${selectedDate}`} tone="blue" />
-        <StatCard icon={ClipboardCheck} label="Bán trú" value={stats.banTru} unit="học sinh" hint="Trạng thái bán trú trong ngày" tone="green" />
-        <StatCard icon={UserX} label="Không bán trú" value={stats.khongBanTru} unit="học sinh" hint="Trạng thái bán trú trong ngày" tone="gray" />
-        <StatCard icon={Moon} label="Chỉ ngủ bán trú" value={stats.chiNgu} unit="học sinh" hint="Trạng thái bán trú trong ngày" tone="amber" />
+        <StatCard label="Đã điểm danh" value={`${stats.daDiemDanh} / ${stats.tongHocSinh}`} hint={`Ngày ${selectedDate}`} />
+        <StatCard label="Bán trú" value={stats.banTru} unit="học sinh" hint="Trạng thái bán trú trong ngày" />
+        <StatCard label="Không bán trú" value={stats.khongBanTru} unit="học sinh" hint="Trạng thái bán trú trong ngày" />
+        <StatCard label="Chỉ ngủ bán trú" value={stats.chiNgu} unit="học sinh" hint="Trạng thái bán trú trong ngày" />
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">

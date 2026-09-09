@@ -40,8 +40,6 @@ export default function Documents() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Văn bản"
-        eyebrowIcon={FileText}
         title="Văn bản liên quan"
         description="Lưu trữ các văn bản, quy định, mẫu biểu liên quan đến công tác bán trú của trường."
         controls={
@@ -57,7 +55,7 @@ export default function Documents() {
           {documents.map((d) => (
             <div key={d.id} className="flex items-center justify-between gap-3 py-4 first:pt-0 last:pb-0">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-50 text-green-600">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
                   <FileText size={18} />
                 </div>
                 <div>
@@ -73,7 +71,7 @@ export default function Documents() {
                   <a
                     href={d.url}
                     download={d.ten}
-                    className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-green-600"
+                    className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-teal-600"
                     title="Tải xuống"
                   >
                     <Download size={16} />

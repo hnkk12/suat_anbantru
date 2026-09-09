@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { Check, ListOrdered, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { Check, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
 import Card from '../components/ui/Card'
@@ -21,7 +21,7 @@ function Stepper({ step }) {
             <div className="flex flex-col items-center gap-2">
               <div
                 className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
-                  done ? 'bg-green-600 text-white' : active ? 'border-2 border-green-600 text-green-600' : 'border-2 border-gray-200 text-gray-400'
+                  done ? 'bg-teal-600 text-white' : active ? 'border-2 border-teal-600 text-teal-600' : 'border-2 border-gray-200 text-gray-400'
                 }`}
               >
                 {done ? <Check size={16} /> : n}
@@ -29,7 +29,7 @@ function Stepper({ step }) {
               <span className={`text-xs font-medium ${active || done ? 'text-gray-800' : 'text-gray-400'}`}>{label}</span>
             </div>
             {n !== STEPS.length && (
-              <div className={`mx-2 mb-5 h-0.5 flex-1 ${done ? 'bg-green-600' : 'bg-gray-200'}`} />
+              <div className={`mx-2 mb-5 h-0.5 flex-1 ${done ? 'bg-teal-600' : 'bg-gray-200'}`} />
             )}
           </div>
         )
@@ -72,8 +72,6 @@ export default function ThreeStepForm() {
   return (
     <div className="space-y-6">
       <PageHeader
-        eyebrow="Đăng ký bán trú"
-        eyebrowIcon={ListOrdered}
         title="Biểu mẫu đăng ký 3 bước"
         description="Đăng ký loại hình bán trú cho học sinh theo quy trình 3 bước: chọn học sinh, chọn loại đăng ký, xác nhận thông tin."
       />
@@ -81,7 +79,7 @@ export default function ThreeStepForm() {
       <Card>
         {done ? (
           <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-green-50 text-green-600">
+            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-600">
               <CheckCircle2 size={30} />
             </div>
             <h3 className="text-lg font-semibold text-gray-900">Đăng ký thành công</h3>
@@ -105,14 +103,14 @@ export default function ThreeStepForm() {
                       type="button"
                       onClick={() => setForm({ ...form, hocSinhId: s.id })}
                       className={`flex items-center justify-between rounded-lg border p-4 text-left transition-colors ${
-                        form.hocSinhId === s.id ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-green-300'
+                        form.hocSinhId === s.id ? 'border-teal-500 bg-teal-50' : 'border-gray-200 hover:border-teal-300'
                       }`}
                     >
                       <div>
                         <p className="font-medium text-gray-900">{s.hoTen}</p>
                         <p className="text-xs text-gray-500">Lớp {s.lop} · {s.phuHuynh}</p>
                       </div>
-                      {form.hocSinhId === s.id && <Check size={18} className="text-green-600" />}
+                      {form.hocSinhId === s.id && <Check size={18} className="text-teal-600" />}
                     </button>
                   ))}
                 </div>

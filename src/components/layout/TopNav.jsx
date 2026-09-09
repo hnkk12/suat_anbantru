@@ -54,7 +54,7 @@ function Dropdown({ label, items, isActivePrefix }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         className={`flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-          isActive ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-100'
+          isActive ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-100'
         }`}
       >
         {label}
@@ -69,7 +69,7 @@ function Dropdown({ label, items, isActivePrefix }) {
               onClick={() => setOpen(false)}
               className={({ isActive: active }) =>
                 `flex items-center gap-2.5 px-4 py-2.5 text-sm transition-colors ${
-                  active ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-50'
+                  active ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-50'
                 }`
               }
             >
@@ -92,7 +92,7 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
     <header className="sticky top-0 z-30 border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
         <NavLink to="/" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-green-600 text-white">
+          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white">
             <UtensilsCrossed size={18} />
           </span>
           <span className="text-sm font-bold tracking-wide text-gray-900 sm:text-base">{schoolName}</span>
@@ -104,7 +104,7 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
             to="/bieu-mau-3-buoc"
             className={({ isActive }) =>
               `flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                isActive ? 'bg-green-50 text-green-700' : 'text-gray-600 hover:bg-gray-100'
+                isActive ? 'bg-teal-50 text-teal-700' : 'text-gray-600 hover:bg-gray-100'
               }`
             }
           >
@@ -118,7 +118,7 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
           <button
             type="button"
             onClick={() => navigate('/van-ban-lien-quan')}
-            className="hidden items-center gap-1.5 rounded-lg bg-green-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-green-700 sm:flex"
+            className="hidden items-center gap-1.5 rounded-lg bg-teal-600 px-3.5 py-2 text-sm font-medium text-white shadow-sm transition-colors hover:bg-teal-700 sm:flex"
           >
             <FileText size={15} />
             Văn bản liên quan
@@ -173,7 +173,7 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
             to={item.to}
             className={({ isActive }) =>
               `whitespace-nowrap rounded-lg px-3 py-1.5 text-xs font-medium ${
-                isActive ? 'bg-green-50 text-green-700' : 'text-gray-500'
+                isActive ? 'bg-teal-50 text-teal-700' : 'text-gray-500'
               }`
             }
           >
