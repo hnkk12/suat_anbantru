@@ -40,9 +40,9 @@ export default function AttendanceSummary({
   const sleepOnlyRate = total > 0 ? ((sleepOnly / total) * 100).toFixed(1) : 0
 
   const cards = [
-    { id: 'ban-tru', title: 'Bán trú', count: boarding, rate: `${boardingRate}%` },
-    { id: 'khong-ban-tru', title: 'Không bán trú', count: nonBoarding, rate: `${nonBoardingRate}%` },
-    { id: 'chi-ngu', title: 'Chỉ ngủ bán trú', count: sleepOnly, rate: `${sleepOnlyRate}%` },
+    { id: 'ban-tru', title: 'Bán trú', count: boarding, rate: `${boardingRate}%`, rateClass: 'bg-emerald-100 text-emerald-700' },
+    { id: 'khong-ban-tru', title: 'Không bán trú', count: nonBoarding, rate: `${nonBoardingRate}%`, rateClass: 'bg-rose-100 text-rose-700' },
+    { id: 'chi-ngu', title: 'Chỉ ngủ bán trú', count: sleepOnly, rate: `${sleepOnlyRate}%`, rateClass: 'bg-violet-100 text-violet-700' },
   ]
 
   const handleCardClick = (_card) => {
@@ -87,7 +87,7 @@ export default function AttendanceSummary({
             </div>
 
             <div>
-              <span className="rounded-lg bg-gray-100 px-2.5 py-1 text-xs font-semibold text-gray-600">
+              <span className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${item.rateClass}`}>
                 {loading ? '—' : item.rate}
               </span>
             </div>

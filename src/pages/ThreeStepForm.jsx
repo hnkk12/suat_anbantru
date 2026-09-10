@@ -1,168 +1,68 @@
-import { useMemo, useState } from 'react'
-import { Check, ChevronLeft, ChevronRight, CheckCircle2 } from 'lucide-react'
+import { useRef, useState } from 'react'
+import { CalendarDays, Camera, ChevronLeft, ChevronRight, Eye, FileImage, Plus, Trash2 } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { useLocalStorageState } from '../context/useLocalStorageState'
 import PageHeader from '../components/layout/PageHeader'
-import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
-import { Select, Input, Textarea } from '../components/ui/Field'
-import { BOARDING_STATUS } from '../data/mockData'
+import Modal from '../components/ui/Modal'
+import { formatDateVN } from '../utils/dateUtils'
 
-const STEPS = ['Chọn học sinh', 'Chọn loại đăng ký', 'Xác nhận']
+const GROUPS = [
+  { id: 'form_1', title: 'Biểu mẫu 1', description: 'Hình ảnh kiểm tra nguyên liệu đầu vào.' },
+  { id: 'form_1a', title: 'Biểu mẫu 1A', description: 'Hình ảnh kiểm thực bước một.' },
+  { id: 'form_2', title: 'Biểu mẫu 2', description: 'Hình ảnh kiểm thực bước hai.' },
+  { id: 'form_3', title: 'Biểu mẫu 3', description: 'Hình ảnh kiểm thực bước ba.' },
+  { id: 'form_5', title: 'Biểu mẫu 5', description: 'Hình ảnh giao nhận suất ăn.' },
+  { id: 'sample_storage', title: 'Hình lưu mẫu', description: 'Hình ảnh lưu mẫu thức ăn trong ngày.' },
+]
+const MAX_IMAGES = 10
 
-function Stepper({ step }) {
-  return (
-    <div className="flex items-center">
-      {STEPS.map((label, idx) => {
-        const n = idx + 1
-        const active = n === step
-        const done = n < step
-        return (
-          <div key={label} className="flex flex-1 items-center last:flex-none">
-            <div className="flex flex-col items-center gap-2">
-              <div
-                className={`flex h-9 w-9 items-center justify-center rounded-full text-sm font-semibold ${
-                  done ? 'bg-teal-600 text-white' : active ? 'border-2 border-teal-600 text-teal-600' : 'border-2 border-gray-200 text-gray-400'
-                }`}
-              >
-                {done ? <Check size={16} /> : n}
-              </div>
-              <span className={`text-xs font-medium ${active || done ? 'text-gray-800' : 'text-gray-400'}`}>{label}</span>
-            </div>
-            {n !== STEPS.length && (
-              <div className={`mx-2 mb-5 h-0.5 flex-1 ${done ? 'bg-teal-600' : 'bg-gray-200'}`} />
-            )}
-          </div>
-        )
-      })}
-    </div>
-  )
-}
-
-const emptyForm = {
-  hocSinhId: '', loaiDangKy: BOARDING_STATUS.BAN_TRU, ngayApDung: new Date().toISOString().slice(0, 10), ghiChu: '',
+function ImageCard({ group, images, onChoose, onPreview, onRemove }) {
+  const ref = useRef(null)
+  const full = images.length >= MAX_IMAGES
+  return <article className="flex min-h-[152px] flex-col rounded-xl border border-slate-200 bg-white p-3.5 shadow-sm">
+    <div className="flex items-start justify-between gap-3"><div className="flex min-w-0 gap-2.5"><span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-teal-50 text-teal-700"><FileImage size={16} /></span><div className="min-w-0"><h2 className="text-sm font-bold text-slate-900">{group.title}</h2><p className="mt-0.5 line-clamp-1 text-xs text-slate-500">{group.description}</p></div></div><span className={`shrink-0 rounded-full px-2 py-0.5 text-[11px] font-semibold ${full ? 'bg-amber-50 text-amber-700' : 'bg-teal-50 text-teal-700'}`}>{images.length}/{MAX_IMAGES}</span></div>
+    <input ref={ref} type="file" accept="image/jpeg,image/png,image/webp" multiple className="hidden" onChange={(e) => { onChoose(e.target.files); e.target.value = '' }} />
+    <div className="mt-3 flex min-h-16 flex-1 flex-wrap content-start items-center gap-2">{images.length === 0 ? <button type="button" disabled={full} onClick={() => ref.current?.click()} className="flex items-center gap-1.5 rounded-lg border border-dashed border-teal-300 bg-teal-50/60 px-3 py-2 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100"><Camera size={15} />Thêm ảnh <span className="font-normal text-teal-600">· JPG, PNG · tối đa 10</span></button> : <>{images.map((image, index) => <div key={image.id} className="group relative h-14 w-14 overflow-hidden rounded-lg border border-slate-200 bg-slate-100"><img src={image.src} alt={image.name} className="h-full w-full object-cover" /><div className="absolute inset-0 flex items-center justify-center gap-1 bg-slate-900/50 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"><button type="button" aria-label={`Xem ${image.name}`} onClick={() => onPreview(index)} className="rounded-md bg-white p-1 text-slate-700 shadow-sm"><Eye size={12} /></button><button type="button" aria-label={`Xóa ${image.name}`} onClick={() => onRemove(image.id)} className="rounded-md bg-white p-1 text-rose-600 shadow-sm"><Trash2 size={12} /></button></div></div>)}<button type="button" disabled={full} onClick={() => ref.current?.click()} className="flex h-14 items-center gap-1 rounded-lg border border-dashed border-teal-300 bg-teal-50/60 px-2.5 text-xs font-semibold text-teal-700 transition-colors hover:bg-teal-100 disabled:cursor-not-allowed disabled:border-slate-200 disabled:bg-slate-100 disabled:text-slate-400"><Plus size={14} />{full ? 'Đã đạt giới hạn' : 'Thêm ảnh'}</button></>}</div>
+  </article>
 }
 
 export default function ThreeStepForm() {
-  const { students, addRegistration } = useApp()
-  const [step, setStep] = useState(1)
-  const [form, setForm] = useState(emptyForm)
-  const [done, setDone] = useState(false)
+  const { selectedDate, setSelectedDate } = useApp()
+  const [records, setRecords] = useLocalStorageState('three_step_form_images', {})
+  const [preview, setPreview] = useState(null)
+  const [message, setMessage] = useState(null)
+  const dayData = records[selectedDate] || {}
+  const total = GROUPS.reduce((sum, group) => sum + (dayData[group.id]?.length || 0), 0)
+  const completedGroups = GROUPS.filter((group) => (dayData[group.id]?.length || 0) > 0).length
+  const progress = Math.round((completedGroups / GROUPS.length) * 100)
 
-  const selectedStudent = useMemo(() => students.find((s) => s.id === form.hocSinhId), [students, form.hocSinhId])
-
-  function next() {
-    if (step === 1 && !form.hocSinhId) return
-    setStep((s) => Math.min(3, s + 1))
+  function saveImages(groupId, files) {
+    const current = dayData[groupId] || []
+    const allowed = MAX_IMAGES - current.length
+    const selected = Array.from(files || [])
+    if (selected.length > allowed) setMessage(`Nhóm này chỉ có thể lưu tối đa ${MAX_IMAGES} ảnh.`)
+    selected.slice(0, allowed).forEach((file) => {
+      const reader = new FileReader()
+      reader.onload = () => setRecords((previous) => {
+        const dateRecord = previous[selectedDate] || {}
+        const images = dateRecord[groupId] || []
+        return { ...previous, [selectedDate]: { ...dateRecord, [groupId]: [...images, { id: `${Date.now()}_${Math.random()}`, name: file.name, src: reader.result }] } }
+      })
+      reader.readAsDataURL(file)
+    })
   }
-  function back() {
-    setStep((s) => Math.max(1, s - 1))
+  function removeImage(groupId, imageId) {
+    setRecords((previous) => ({ ...previous, [selectedDate]: { ...dayData, [groupId]: (dayData[groupId] || []).filter((image) => image.id !== imageId) } }))
   }
+  const previewImages = preview ? dayData[preview.groupId] || [] : []
 
-  function handleConfirm() {
-    addRegistration({ ...form, ngayTao: new Date().toISOString().slice(0, 10) })
-    setDone(true)
-  }
-
-  function reset() {
-    setForm(emptyForm)
-    setStep(1)
-    setDone(false)
-  }
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Biểu mẫu đăng ký 3 bước"
-        description="Đăng ký loại hình bán trú cho học sinh theo quy trình 3 bước: chọn học sinh, chọn loại đăng ký, xác nhận thông tin."
-      />
-
-      <Card>
-        {done ? (
-          <div className="flex flex-col items-center gap-3 py-8 text-center">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-teal-50 text-teal-600">
-              <CheckCircle2 size={30} />
-            </div>
-            <h3 className="text-lg font-semibold text-gray-900">Đăng ký thành công</h3>
-            <p className="max-w-md text-sm text-gray-500">
-              Đã ghi nhận đăng ký <span className="font-medium text-gray-700">{form.loaiDangKy}</span> cho học sinh{' '}
-              <span className="font-medium text-gray-700">{selectedStudent?.hoTen}</span> áp dụng từ ngày {form.ngayApDung}.
-            </p>
-            <Button onClick={reset}>Tạo đăng ký khác</Button>
-          </div>
-        ) : (
-          <div className="space-y-8">
-            <Stepper step={step} />
-
-            {step === 1 && (
-              <div className="space-y-3">
-                <p className="text-sm font-medium text-gray-700">Chọn học sinh cần đăng ký</p>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  {students.map((s) => (
-                    <button
-                      key={s.id}
-                      type="button"
-                      onClick={() => setForm({ ...form, hocSinhId: s.id })}
-                      className={`flex items-center justify-between rounded-lg border p-4 text-left transition-colors ${
-                        form.hocSinhId === s.id ? 'border-teal-500 bg-teal-50' : 'border-gray-200 hover:border-teal-300'
-                      }`}
-                    >
-                      <div>
-                        <p className="font-medium text-gray-900">{s.hoTen}</p>
-                        <p className="text-xs text-gray-500">Lớp {s.lop} · {s.phuHuynh}</p>
-                      </div>
-                      {form.hocSinhId === s.id && <Check size={18} className="text-teal-600" />}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <Select label="Loại đăng ký" value={form.loaiDangKy} onChange={(e) => setForm({ ...form, loaiDangKy: e.target.value })}>
-                  {Object.values(BOARDING_STATUS).map((v) => <option key={v} value={v}>{v}</option>)}
-                </Select>
-                <Input type="date" label="Ngày áp dụng" value={form.ngayApDung} onChange={(e) => setForm({ ...form, ngayApDung: e.target.value })} />
-                <Textarea label="Ghi chú thêm (không bắt buộc)" className="sm:col-span-2" rows={3} value={form.ghiChu} onChange={(e) => setForm({ ...form, ghiChu: e.target.value })} />
-              </div>
-            )}
-
-            {step === 3 && (
-              <div className="space-y-3 rounded-lg border border-gray-100 bg-gray-50 p-5 text-sm">
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-500">Học sinh</span>
-                  <span className="font-medium text-gray-900">{selectedStudent?.hoTen} — Lớp {selectedStudent?.lop}</span>
-                </div>
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-500">Loại đăng ký</span>
-                  <span className="font-medium text-gray-900">{form.loaiDangKy}</span>
-                </div>
-                <div className="flex justify-between border-b border-gray-200 pb-2">
-                  <span className="text-gray-500">Ngày áp dụng</span>
-                  <span className="font-medium text-gray-900">{form.ngayApDung}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Ghi chú</span>
-                  <span className="max-w-xs text-right font-medium text-gray-900">{form.ghiChu || '—'}</span>
-                </div>
-              </div>
-            )}
-
-            <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-              <Button variant="secondary" onClick={back} disabled={step === 1}>
-                <ChevronLeft size={16} /> Quay lại
-              </Button>
-              {step < 3 ? (
-                <Button onClick={next} disabled={step === 1 && !form.hocSinhId}>
-                  Tiếp tục <ChevronRight size={16} />
-                </Button>
-              ) : (
-                <Button onClick={handleConfirm}>Xác nhận đăng ký</Button>
-              )}
-            </div>
-          </div>
-        )}
-      </Card>
-    </div>
-  )
+  return <div className="space-y-6">
+    {message && <div className="fixed bottom-6 right-6 z-50 rounded-xl bg-rose-700 px-4 py-3 text-sm font-medium text-white shadow-xl">{message}</div>}
+    <PageHeader eyebrow="Quản trị" eyebrowIcon={FileImage} title="Biểu mẫu 3 bước" description="Quản lý hình ảnh biểu mẫu theo từng ngày." controls={<Button variant="secondary" disabled title="Chưa có service export"><FileImage size={16} /> Xuất biểu mẫu 3 bước</Button>} />
+    <section className="flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:p-5"><div><p className="text-xs font-medium text-slate-400">Ngày xem dữ liệu</p><p className="mt-1 text-base font-bold text-slate-900">{formatDateVN(selectedDate)}</p></div><div className="flex flex-wrap items-center gap-2"><label className="flex items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600"><CalendarDays size={15} /><input type="date" value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)} className="bg-transparent outline-none" /></label><Button size="sm" variant="secondary" onClick={() => setSelectedDate(new Date().toISOString().slice(0, 10))}>Hôm nay</Button></div></section>
+    <section className="rounded-xl border border-teal-100 bg-teal-50/40 px-4 py-3"><div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1"><p className="text-sm font-bold text-teal-900">Tiến độ biểu mẫu</p><p className="text-xs text-teal-700">{completedGroups}/{GROUPS.length} nhóm có ảnh · {total} ảnh</p><span className="text-base font-bold text-teal-800">{progress}%</span></div><div className="mt-2 h-1.5 overflow-hidden rounded-full bg-teal-100"><div className="h-full rounded-full bg-teal-600" style={{ width: `${progress}%` }} /></div></section>
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">{GROUPS.map((group) => <ImageCard key={group.id} group={group} images={dayData[group.id] || []} onChoose={(files) => saveImages(group.id, files)} onRemove={(id) => removeImage(group.id, id)} onPreview={(index) => setPreview({ groupId: group.id, index })} />)}</div>
+    <Modal open={Boolean(preview)} onClose={() => setPreview(null)} title={preview ? GROUPS.find((group) => group.id === preview.groupId)?.title : ''} width="max-w-2xl" footer={<Button variant="secondary" onClick={() => setPreview(null)}>Đóng</Button>}>{preview && previewImages.length > 0 && <div className="space-y-3"><img src={previewImages[preview.index]?.src} alt={previewImages[preview.index]?.name} className="max-h-[55vh] w-full rounded-xl object-contain" /><div className="flex items-center justify-between"><Button size="sm" variant="secondary" disabled={preview.index === 0} onClick={() => setPreview({ ...preview, index: preview.index - 1 })}><ChevronLeft size={15} /> Trước</Button><span className="text-xs text-slate-500">{preview.index + 1}/{previewImages.length}</span><Button size="sm" variant="secondary" disabled={preview.index === previewImages.length - 1} onClick={() => setPreview({ ...preview, index: preview.index + 1 })}>Sau <ChevronRight size={15} /></Button></div></div>}</Modal>
+  </div>
 }

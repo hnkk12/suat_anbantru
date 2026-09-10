@@ -1,139 +1,54 @@
-import { useMemo, useState } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useState } from 'react'
+import { BedDouble, CircleDollarSign, Pencil, Percent, Plus, Trash2, Users } from 'lucide-react'
 import { useApp } from '../context/AppContext'
+import { useLocalStorageState } from '../context/useLocalStorageState'
 import PageHeader from '../components/layout/PageHeader'
-import StatCard from '../components/layout/StatCard'
-import { Select } from '../components/ui/Field'
-import Tabs from '../components/ui/Tabs'
+import Button from '../components/ui/Button'
+import Modal from '../components/ui/Modal'
+import { Input, Select } from '../components/ui/Field'
+const emptyForm = { totalStudents: '', boardingStudents: '', mealPrice: '' }
+const money = (value) => `${new Intl.NumberFormat('vi-VN').format(Number(value || 0))} đ`
+const ratio = (record) => record?.totalStudents > 0 ? (record.boardingStudents / record.totalStudents) * 100 : 0
+const ratioLabel = (record) => `${ratio(record).toLocaleString('vi-VN', { maximumFractionDigits: 1 })}%`
 
-const WEEK_DATA = [
-  { day: 'T2', suat: 3 }, { day: 'T3', suat: 4 }, { day: 'T4', suat: 4 },
-  { day: 'T5', suat: 2 }, { day: 'T6', suat: 4 },
-]
-
-const TABS = [
-  { value: 'tong-hop', label: 'Tổng hợp' },
-  { value: 'diem-danh', label: 'Điểm danh' },
-  { value: 'lop', label: 'Theo lớp' },
-]
+function ReportForm({ form, setForm, errors }) {
+  const update = (key, value) => setForm((previous) => ({ ...previous, [key]: value }))
+  return <div className="grid gap-4 sm:grid-cols-2">
+    <div><Input label="Số học sinh" type="number" min="0" step="1" value={form.totalStudents} onChange={(e) => update('totalStudents', e.target.value)} placeholder="Ví dụ: 1000" /><p className="mt-1 text-xs text-rose-600">{errors.totalStudents}</p></div>
+    <div><Input label="Số học sinh bán trú" type="number" min="0" step="1" value={form.boardingStudents} onChange={(e) => update('boardingStudents', e.target.value)} placeholder="Ví dụ: 500" /><p className="mt-1 text-xs text-rose-600">{errors.boardingStudents}</p></div>
+    <div className="sm:col-span-2"><label className="flex flex-col gap-1 text-sm"><span className="text-xs font-medium text-gray-500">Tiền bán trú / 1 học sinh / ngày</span><div className="flex overflow-hidden rounded-lg border border-gray-300 focus-within:border-teal-700 focus-within:ring-2 focus-within:ring-teal-100"><input type="number" min="0" value={form.mealPrice} onChange={(e) => update('mealPrice', e.target.value)} placeholder="Ví dụ: 35000" className="min-w-0 flex-1 px-3 py-2 text-sm outline-none" /><span className="border-l border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">đ</span></div></label><p className="mt-1 text-xs text-rose-600">{errors.mealPrice}</p></div>
+  </div>
+}
 
 export default function Reports() {
-  const { students, classes, evaluations } = useApp()
-  const [params] = useSearchParams()
-  const initialTab = params.get('tab') === 'diem-danh' || params.get('tab') === 'lop' ? params.get('tab') : 'tong-hop'
-  const [tab, setTab] = useState(initialTab)
-  const [range, setRange] = useState('Tuần này')
+  const { schoolYear, setSchoolYear, schoolYears } = useApp()
+  const [reports, setReports] = useLocalStorageState('boarding_reports', [])
+  const [form, setForm] = useState(emptyForm)
+  const [errors, setErrors] = useState({})
+  const [editing, setEditing] = useState(null)
+  const [deleting, setDeleting] = useState(null)
+  const filteredReports = reports.filter((report) => report.schoolYear === schoolYear)
+  const currentReport = filteredReports[0]
 
-  const maxSuat = Math.max(...WEEK_DATA.map((d) => d.suat), 1)
+  function validate() {
+    const next = {}; const total = Number(form.totalStudents); const boarding = Number(form.boardingStudents); const price = Number(form.mealPrice)
+    if (form.totalStudents === '' || !Number.isInteger(total) || total < 0) next.totalStudents = 'Vui lòng nhập số nguyên không âm.'
+    if (form.boardingStudents === '' || !Number.isInteger(boarding) || boarding < 0) next.boardingStudents = 'Vui lòng nhập số nguyên không âm.'
+    else if (boarding > total) next.boardingStudents = 'Số học sinh bán trú không được lớn hơn tổng số học sinh.'
+    if (form.mealPrice === '' || Number.isNaN(price) || price < 0) next.mealPrice = 'Vui lòng nhập số tiền không âm.'
+    setErrors(next); return Object.keys(next).length === 0
+  }
+  function openCreate() { setEditing('create'); setForm(emptyForm); setErrors({}) }
+  function openEdit(report) { setEditing(report); setForm({ totalStudents: String(report.totalStudents), boardingStudents: String(report.boardingStudents), mealPrice: String(report.mealPrice) }); setErrors({}) }
+  function saveReport() { if (!validate()) return; const payload = { totalStudents: Number(form.totalStudents), boardingStudents: Number(form.boardingStudents), mealPrice: Number(form.mealPrice), schoolYear }; if (editing === 'create') setReports((previous) => [...previous, { id: `report_${Date.now()}`, ...payload }]); else setReports((previous) => previous.map((report) => report.id === editing.id ? { ...report, ...payload } : report)); setEditing(null) }
+  function deleteReport() { setReports((previous) => previous.filter((report) => report.id !== deleting.id)); setDeleting(null) }
+  const kpis = [{ label: 'Tổng số học sinh', value: currentReport?.totalStudents ?? '—', Icon: Users }, { label: 'Học sinh bán trú', value: currentReport?.boardingStudents ?? '—', sub: currentReport ? `${currentReport.boardingStudents} / ${currentReport.totalStudents} học sinh` : undefined, Icon: BedDouble }, { label: 'Tỷ lệ bán trú', value: currentReport ? ratioLabel(currentReport) : '—', Icon: Percent }, { label: 'Tiền bán trú / HS / ngày', value: currentReport ? money(currentReport.mealPrice) : '—', Icon: CircleDollarSign }]
 
-  const classBreakdown = useMemo(() => {
-    return classes.map((c) => ({
-      ...c,
-      soHocSinh: students.filter((s) => s.lop === c.name).length,
-      banTru: students.filter((s) => s.lop === c.name && s.trangThai === 'Bán trú').length,
-    }))
-  }, [classes, students])
-
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Báo cáo bán trú"
-        description="Tổng hợp số liệu học sinh, suất ăn và điểm danh bán trú theo thời gian."
-        controls={
-          <Select value={range} onChange={(e) => setRange(e.target.value)}>
-            <option>Tuần này</option>
-            <option>Tháng này</option>
-            <option>Học kỳ này</option>
-          </Select>
-        }
-      />
-
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <StatCard label="Tổng học sinh" value={students.length} />
-        <StatCard label="Suất ăn / tuần (ước tính)" value={WEEK_DATA.reduce((a, b) => a + b.suat, 0)} />
-        <StatCard label="Lượt đánh giá đã ghi nhận" value={evaluations.length} />
-      </div>
-
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="px-4 pt-2">
-          <Tabs tabs={TABS} active={tab} onChange={setTab} />
-        </div>
-        <div className="p-5">
-          {tab === 'tong-hop' && (
-            <div>
-              <p className="mb-4 text-sm font-medium text-gray-600">Số suất bán trú theo ngày trong tuần</p>
-              <div className="flex items-end gap-4 sm:gap-8">
-                {WEEK_DATA.map((d) => (
-                  <div key={d.day} className="flex flex-1 flex-col items-center gap-2">
-                    <div className="flex h-40 w-full items-end justify-center">
-                      <div
-                        className="w-8 rounded-t-md bg-teal-500 sm:w-12"
-                        style={{ height: `${(d.suat / maxSuat) * 100}%` }}
-                        title={`${d.suat} suất`}
-                      />
-                    </div>
-                    <span className="text-xs font-medium text-gray-500">{d.day}</span>
-                    <span className="text-xs text-gray-400">{d.suat} suất</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {tab === 'diem-danh' && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-100 text-sm">
-                <thead>
-                  <tr>
-                    {['Ngày', 'Học sinh', 'Ăn uống', 'Ngủ nghỉ', 'Ý thức'].map((h) => (
-                      <th key={h} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {evaluations.map((ev) => (
-                    <tr key={ev.id}>
-                      <td className="px-3 py-3 text-gray-600">{ev.ngay}</td>
-                      <td className="px-3 py-3 font-medium text-gray-900">{students.find((s) => s.id === ev.hocSinhId)?.hoTen ?? '—'}</td>
-                      <td className="px-3 py-3 text-gray-600">{ev.anUong}</td>
-                      <td className="px-3 py-3 text-gray-600">{ev.nguNghi}</td>
-                      <td className="px-3 py-3 text-gray-600">{ev.yThuc}</td>
-                    </tr>
-                  ))}
-                  {evaluations.length === 0 && (
-                    <tr><td colSpan={5} className="py-8 text-center text-gray-400">Chưa có dữ liệu điểm danh.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          {tab === 'lop' && (
-            <div className="overflow-x-auto">
-              <table className="min-w-full divide-y divide-gray-100 text-sm">
-                <thead>
-                  <tr>
-                    {['Lớp', 'Khối', 'Sĩ số', 'Học sinh trong hệ thống', 'Bán trú'].map((h) => (
-                      <th key={h} className="px-3 py-2 text-left text-xs font-semibold uppercase tracking-wide text-gray-400">{h}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {classBreakdown.map((c) => (
-                    <tr key={c.id}>
-                      <td className="px-3 py-3 font-medium text-gray-900">{c.name}</td>
-                      <td className="px-3 py-3 text-gray-600">{c.khoi}</td>
-                      <td className="px-3 py-3 text-gray-600">{c.siSo}</td>
-                      <td className="px-3 py-3 text-gray-600">{c.soHocSinh}</td>
-                      <td className="px-3 py-3 text-gray-600">{c.banTru}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  )
+  return <div className="space-y-5">
+    <PageHeader title="Báo cáo học sinh bán trú" description="Thống kê tình hình học sinh bán trú và đơn giá theo năm học" controls={<div className="flex flex-wrap items-end gap-2"><Select label="Năm học" value={schoolYear} onChange={(e) => setSchoolYear(e.target.value)} className="min-w-40">{schoolYears.map((year) => <option key={year}>{year}</option>)}</Select><Button onClick={openCreate}><Plus size={16} />Thêm dữ liệu bán trú</Button></div>} />
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">{kpis.map(({ label, value, sub, Icon }) => <section key={label} className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm"><div className="flex items-center justify-between"><p className="text-xs font-medium text-slate-500">{label}</p><span className="rounded-lg bg-teal-50 p-2 text-teal-700"><Icon size={17} /></span></div><p className="mt-3 text-2xl font-bold text-slate-900">{value}</p>{sub && <p className="mt-1 text-xs text-slate-500">{sub}</p>}</section>)}</div>
+    <section className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm"><div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-100 px-4 py-3"><div><h2 className="text-sm font-bold text-slate-900">Dữ liệu bán trú</h2><p className="mt-0.5 text-xs text-slate-500">Năm học {schoolYear}</p></div><Button size="sm" variant="secondary" onClick={openCreate}><Plus size={15} />Thêm mới</Button></div>{filteredReports.length === 0 ? <div className="px-4 py-10 text-center"><p className="text-sm font-medium text-slate-600">Chưa có dữ liệu báo cáo cho năm học này</p><Button size="sm" className="mt-3" onClick={openCreate}><Plus size={15} />Thêm dữ liệu</Button></div> : <div className="overflow-x-auto"><table className="min-w-[820px] w-full text-sm"><thead className="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-400"><tr>{['STT', 'Năm học', 'Tổng số học sinh', 'Học sinh bán trú', 'Tỷ lệ bán trú', 'Đơn giá / HS / ngày', 'Thao tác'].map((heading) => <th key={heading} className="px-4 py-3">{heading}</th>)}</tr></thead><tbody className="divide-y divide-slate-100">{filteredReports.map((report, index) => <tr key={report.id} className="text-slate-600"><td className="px-4 py-3">{index + 1}</td><td className="px-4 py-3 font-medium text-slate-900">{report.schoolYear}</td><td className="px-4 py-3">{report.totalStudents}</td><td className="px-4 py-3"><div>{report.boardingStudents}</div><div className="mt-1 h-1.5 w-28 overflow-hidden rounded-full bg-teal-100"><div className="h-full rounded-full bg-teal-600" style={{ width: `${Math.min(100, ratio(report))}%` }} /></div></td><td className="px-4 py-3 font-medium text-teal-700">{ratioLabel(report)}</td><td className="px-4 py-3">{money(report.mealPrice)}</td><td className="px-4 py-3"><div className="flex gap-1"><Button size="sm" variant="ghost" title="Chỉnh sửa" aria-label="Chỉnh sửa" onClick={() => openEdit(report)}><Pencil size={15} /></Button><Button size="sm" variant="ghost" title="Xóa" aria-label="Xóa" className="text-rose-600 hover:bg-rose-50" onClick={() => setDeleting(report)}><Trash2 size={15} /></Button></div></td></tr>)}</tbody></table></div>}</section>
+    <Modal open={Boolean(editing)} onClose={() => setEditing(null)} title={editing === 'create' ? 'Thêm dữ liệu bán trú' : 'Chỉnh sửa dữ liệu bán trú'} width="max-w-xl" footer={<><Button variant="secondary" onClick={() => setEditing(null)}>Hủy</Button><Button onClick={saveReport}>Lưu</Button></>}><ReportForm form={form} setForm={setForm} errors={errors} /></Modal>
+    <Modal open={Boolean(deleting)} onClose={() => setDeleting(null)} title="Xóa dữ liệu báo cáo" footer={<><Button variant="secondary" onClick={() => setDeleting(null)}>Hủy</Button><Button variant="danger" onClick={deleteReport}>Xóa</Button></>}><p className="text-sm text-slate-600">Xóa dữ liệu năm học <strong>{deleting?.schoolYear}</strong>?</p></Modal>
+  </div>
 }

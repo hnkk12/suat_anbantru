@@ -11,6 +11,7 @@ import ThreeStepForm from './pages/ThreeStepForm'
 import Reports from './pages/Reports'
 import Documents from './pages/Documents'
 import MenuPermissions from './pages/MenuPermissions'
+import Settings from './pages/Settings'
 
 export default function App() {
   return (
@@ -32,6 +33,7 @@ export default function App() {
             <Route path="/phan-quyen-menu" element={<MenuPermissions />} />
             <Route path="/admin/menu-permissions" element={<Navigate to="/phan-quyen-menu" replace />} />
             <Route path="/settings/permissions" element={<Navigate to="/phan-quyen-menu" replace />} />
+            <Route path="/cai-dat" element={<Settings />} />
 
             {/* Lối tắt & Tiện ích */}
             <Route path="/bieu-mau-3-buoc" element={<ThreeStepForm />} />

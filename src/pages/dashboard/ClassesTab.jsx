@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Pencil, Plus, Trash2 } from 'lucide-react'
+import { Download, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
@@ -36,14 +36,11 @@ export default function ClassesTab() {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-gray-500">
           Tổng <span className="font-semibold text-gray-700">{classes.length}</span> lớp học
         </p>
-        <Button onClick={openAdd}>
-          <Plus size={16} />
-          Thêm lớp học
-        </Button>
+        <div className="flex flex-wrap gap-2"><Button size="sm" variant="secondary" disabled title="Chưa có service import"><Upload size={14} />Import LH</Button><Button size="sm" variant="secondary" disabled title="Chưa có service tải mẫu"><Download size={14} />Tải mẫu</Button><Button onClick={openAdd}><Plus size={16} />Thêm lớp học</Button></div>
       </div>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">

@@ -1,10 +1,12 @@
-import { useState } from 'react'
-import { Search } from 'lucide-react'
+import { useEffect, useState } from 'react'
+import { CircleHelp, Search } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
 import StatCard from '../components/layout/StatCard'
 import Tabs from '../components/ui/Tabs'
 import { Select, Input } from '../components/ui/Field'
+import Modal from '../components/ui/Modal'
+import Button from '../components/ui/Button'
 import StudentsTab from './dashboard/StudentsTab'
 import ClassesTab from './dashboard/ClassesTab'
 import TeachersTab from './dashboard/TeachersTab'
@@ -18,6 +20,15 @@ const TABS = [
 export default function Dashboard() {
   const { schoolYear, setSchoolYear, schoolYears, selectedDate, setSelectedDate, searchTerm, setSearchTerm, stats } = useApp()
   const [tab, setTab] = useState('hoc-sinh')
+  const [helpOpen, setHelpOpen] = useState(false)
+
+  useEffect(() => {
+    const closeOnEscape = (event) => {
+      if (event.key === 'Escape') setHelpOpen(false)
+    }
+    window.addEventListener('keydown', closeOnEscape)
+    return () => window.removeEventListener('keydown', closeOnEscape)
+  }, [])
 
   return (
     <div className="space-y-6">
@@ -60,8 +71,17 @@ export default function Dashboard() {
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
-        <div className="px-4 pt-2">
-          <Tabs tabs={TABS} active={tab} onChange={setTab} />
+        <div className="flex items-center gap-2 px-4 pt-2">
+          <button
+            type="button"
+            aria-label="Hướng dẫn sử dụng"
+            title="Hướng dẫn sử dụng"
+            onClick={() => setHelpOpen(true)}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-teal-50 text-teal-700 transition-colors hover:bg-teal-100 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+          >
+            <CircleHelp size={18} />
+          </button>
+          <div className="min-w-0 flex-1"><Tabs tabs={TABS} active={tab} onChange={setTab} /></div>
         </div>
         <div className="p-4">
           {tab === 'hoc-sinh' && <StudentsTab />}
@@ -69,6 +89,17 @@ export default function Dashboard() {
           {tab === 'giao-vien' && <TeachersTab />}
         </div>
       </div>
+
+      <Modal open={helpOpen} onClose={() => setHelpOpen(false)} title="Hướng dẫn sử dụng" width="max-w-md" footer={<Button variant="secondary" onClick={() => setHelpOpen(false)}>Đóng</Button>}>
+        <p className="text-sm text-slate-500">Cách thao tác nhanh trên trang quản lý học sinh</p>
+        <ol className="mt-4 space-y-4">
+          {[
+            'Chọn năm học và tìm học sinh/lớp/tài khoản liên quan.',
+            'Tab Học sinh dùng để import danh sách, thêm mới hoặc xem dữ liệu lớp đang học.',
+            'Tab Lớp học và Tài khoản giáo viên dùng để import file, tạo mới và gán người phụ trách.',
+          ].map((item, index) => <li key={item} className="flex gap-3 text-sm leading-relaxed text-slate-700"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-teal-50 text-xs font-bold text-teal-700">{index + 1}</span><span>{item}</span></li>)}
+        </ol>
+      </Modal>
     </div>
   )
 }

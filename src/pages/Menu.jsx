@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { CalendarDays, ChevronLeft, ChevronRight, Download, ImagePlus, Pencil, Trash2, Upload, UtensilsCrossed } from 'lucide-react'
 import { useApp } from '../context/AppContext'
 import PageHeader from '../components/layout/PageHeader'
@@ -14,6 +14,35 @@ function MealContent({ value }) {
   if (!value) return <span className="text-xs italic text-slate-400">Chưa có thực đơn</span>
   const dishes = value.split(',').map((dish) => dish.trim()).filter(Boolean)
   return <div className="space-y-1">{dishes.map((dish, index) => <p key={index} className="text-xs leading-relaxed text-slate-600">• {dish}</p>)}</div>
+}
+
+function toIsoDate(date) {
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
+
+function MenuCalendar({ selectedDate, setSelectedDate, menu }) {
+  const [visibleMonth, setVisibleMonth] = useState(() => new Date(`${selectedDate}T00:00:00`))
+  const today = toIsoDate(new Date())
+  useEffect(() => setVisibleMonth(new Date(`${selectedDate}T00:00:00`)), [selectedDate])
+  const year = visibleMonth.getFullYear()
+  const month = visibleMonth.getMonth()
+  const firstDayOffset = (new Date(year, month, 1).getDay() + 6) % 7
+  const daysInMonth = new Date(year, month + 1, 0).getDate()
+  const datesWithMenu = useMemo(() => {
+    const dates = new Map()
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      const date = toIsoDate(new Date(year, month, day))
+      const mealCount = MEALS.filter((meal) => Boolean(menu[getDayOfWeekName(date)]?.[meal])).length
+      if (mealCount > 0) dates.set(date, mealCount)
+    }
+    return dates
+  }, [year, month, menu])
+  const monthLabel = visibleMonth.toLocaleDateString('vi-VN', { month: 'long', year: 'numeric' })
+
+  return <section className="w-full max-w-[340px] rounded-xl border border-slate-200 bg-white p-3 shadow-sm"><div className="flex items-center justify-between"><p className="text-sm font-bold capitalize text-slate-800">{monthLabel}</p><div className="flex gap-0.5"><button type="button" aria-label="Tháng trước" onClick={() => setVisibleMonth(new Date(year, month - 1, 1))} className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-teal-700"><ChevronLeft size={16} /></button><button type="button" aria-label="Tháng sau" onClick={() => setVisibleMonth(new Date(year, month + 1, 1))} className="rounded-md p-1 text-slate-500 hover:bg-slate-100 hover:text-teal-700"><ChevronRight size={16} /></button></div></div><div className="mx-auto mt-2 grid w-[294px] max-w-full grid-cols-7 gap-1 text-center">{['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'].map((label) => <span key={label} className="py-0.5 text-[10px] font-semibold text-slate-400">{label}</span>)}{Array.from({ length: firstDayOffset }, (_, index) => <span key={`empty-${index}`} />)}{Array.from({ length: daysInMonth }, (_, index) => { const day = index + 1; const date = toIsoDate(new Date(year, month, day)); const meals = datesWithMenu.get(date) || 0; const selected = date === selectedDate; const isToday = date === today; const complete = meals === MEALS.length; const state = selected ? 'border-teal-700 bg-teal-700 text-white shadow-sm' : isToday ? 'border-teal-400 bg-white text-teal-700 hover:bg-teal-50' : 'border-transparent bg-transparent text-slate-600 hover:bg-slate-100'; const title = meals ? `${meals}/${MEALS.length} buổi đã cập nhật` : 'Chưa có thực đơn'; return <button key={date} type="button" aria-selected={selected} title={title} onClick={() => setSelectedDate(date)} className={`relative flex h-9 w-9 justify-self-center items-center justify-center rounded-lg border text-xs font-semibold transition-colors ${state}`}>{day}{meals > 0 && !selected && <span aria-hidden="true" className={`absolute bottom-0.5 h-1 w-1 rounded-full ${complete ? 'bg-emerald-600' : 'bg-amber-500'}`} />}</button>})}</div><div className="mt-2 flex flex-wrap gap-x-3 gap-y-1 border-t border-slate-100 pt-2 text-[10px] text-slate-500"><span className="flex items-center gap-1"><i className="h-1.5 w-1.5 rounded-full bg-emerald-500" />Đủ {MEALS.length} buổi</span><span className="flex items-center gap-1"><i className="h-1.5 w-1.5 rounded-full bg-amber-500" />Chưa đủ</span><span className="flex items-center gap-1"><i className="h-1.5 w-1.5 rounded-full bg-teal-700" />Đang chọn</span></div></section>
 }
 
 export default function Menu() {
@@ -90,9 +119,11 @@ export default function Menu() {
             <div className="text-center"><p className="text-xs font-medium text-slate-400">Thực đơn theo ngày</p><h2 className="mt-1 text-base font-bold text-slate-900">{selectedDay}, {formatDateVN(selectedDate)}</h2></div>
             <button onClick={() => moveDay(1)} className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"><ChevronRight size={18} /></button>
           </div>
-          <div className="px-4 pt-4 sm:px-5"><label className="flex w-fit items-center gap-2 rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-medium text-slate-600">Chọn ngày <input type="date" value={selectedDate} onChange={(event) => setSelectedDate(event.target.value)} className="bg-transparent outline-none" /></label></div>
-          <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3 sm:p-5">
-            {MEALS.map((meal) => <article key={meal} className="group rounded-xl border border-slate-200 bg-slate-50/40 p-4"><div className="flex items-center justify-between gap-2"><div><p className="text-sm font-bold text-slate-800">{meal}</p><p className="mt-0.5 text-xs text-slate-400">{(menu[selectedDay]?.[meal] || '').split(',').filter(Boolean).length} món</p></div><button onClick={() => openEdit(selectedDay, meal)} title="Cập nhật thực đơn" className="rounded-lg p-2 text-slate-400 hover:bg-teal-50 hover:text-teal-700"><Pencil size={15} /></button></div><div className="mt-4 border-t border-slate-200 pt-3"><MealContent value={menu[selectedDay]?.[meal]} /></div></article>)}
+          <div className="grid gap-4 p-4 sm:p-5 lg:grid-cols-[minmax(260px,0.35fr)_minmax(0,0.65fr)] lg:items-start">
+            <MenuCalendar selectedDate={selectedDate} setSelectedDate={setSelectedDate} menu={menu} />
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+            {MEALS.map((meal) => <article key={meal} className="group min-h-[118px] rounded-xl border border-slate-200 bg-slate-50/40 p-3"><div className="flex items-center justify-between gap-2"><div><p className="text-sm font-bold text-slate-800">{meal}</p><p className="mt-0.5 text-xs text-slate-400">{(menu[selectedDay]?.[meal] || '').split(',').filter(Boolean).length} món</p></div><button onClick={() => openEdit(selectedDay, meal)} title="Cập nhật thực đơn" className="rounded-lg p-1.5 text-slate-400 hover:bg-teal-50 hover:text-teal-700"><Pencil size={15} /></button></div><div className="mt-2 border-t border-slate-200 pt-2"><MealContent value={menu[selectedDay]?.[meal]} /></div></article>)}
+            </div>
           </div>
           <div className="border-t border-slate-100 p-4 sm:p-5"><div className="mb-4 flex items-center justify-between"><div><h2 className="text-base font-bold text-slate-900">Đánh giá bữa ăn</h2><p className="text-xs text-slate-500">Phản hồi trong ngày {formatDateVN(selectedDate)}</p></div><div className="rounded-xl bg-slate-100 p-1"><button onClick={() => setRatingsTab('students')} className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${ratingsTab === 'students' ? 'bg-white text-teal-700 shadow-sm' : 'text-slate-500'}`}>Học sinh</button><button onClick={() => setRatingsTab('parents')} className={`rounded-lg px-3 py-1.5 text-xs font-semibold ${ratingsTab === 'parents' ? 'bg-white text-teal-700 shadow-sm' : 'text-slate-500'}`}>Phụ huynh</button></div></div>{ratingsTab === 'students' ? <StudentRatings date={selectedDate} evaluations={evaluations} todayMenuDishes={todayDishes} /> : <ParentRatings date={selectedDate} evaluations={parentEvaluations} />}</div>
         </section>

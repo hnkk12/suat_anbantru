@@ -5,12 +5,8 @@ import {
   Bell,
   QrCode,
   HelpCircle,
-  ChevronDown,
   CheckCircle2,
   AlertCircle,
-  User,
-  Settings,
-  LogOut,
 } from 'lucide-react'
 
 function useOutsideClick(ref, handler) {
@@ -26,16 +22,13 @@ function useOutsideClick(ref, handler) {
 }
 
 export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suất Ăn Bán Trú' }) {
-  const [userDropdownOpen, setUserDropdownOpen] = useState(false)
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrImageUnavailable, setQrImageUnavailable] = useState(false)
 
-  const userRef = useRef(null)
   const notificationRef = useRef(null)
   const qrRef = useRef(null)
 
-  useOutsideClick(userRef, () => setUserDropdownOpen(false))
   useOutsideClick(notificationRef, () => setNotificationOpen(false))
   useOutsideClick(qrRef, () => setQrOpen(false))
 
@@ -93,7 +86,6 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
               onClick={() => {
                 setNotificationOpen((prev) => !prev)
                 setQrOpen(false)
-                setUserDropdownOpen(false)
               }}
               aria-label="Thông báo"
               className={`relative flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 ${
@@ -171,7 +163,6 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
               onClick={() => {
                 setQrOpen((prev) => !prev)
                 setNotificationOpen(false)
-                setUserDropdownOpen(false)
               }}
               aria-label="Mở mã QR điểm danh"
               title="Mã QR điểm danh"
@@ -213,82 +204,6 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
             <HelpCircle size={18} strokeWidth={1.9} />
           </button>
 
-          {/* User Profile Area: Avatar, Name, Role + Dropdown */}
-          <div className="relative" ref={userRef}>
-            <button
-              type="button"
-              onClick={() => {
-                setUserDropdownOpen((prev) => !prev)
-                setNotificationOpen(false)
-                setQrOpen(false)
-              }}
-              className="group flex items-center gap-2.5 rounded-full p-1 pr-2 transition-colors hover:bg-gray-100 focus:outline-none"
-            >
-              {/* Avatar circle */}
-              <div className="relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full bg-teal-800 font-semibold text-white">
-                <span className="text-xs sm:text-sm">NK</span>
-              </div>
-
-              {/* User text (Desktop) */}
-              <div className="hidden text-left sm:block">
-                <p className="text-sm font-semibold leading-none text-gray-900">Nam Khang Ha</p>
-                <p className="mt-1 text-xs leading-none text-gray-500">uit</p>
-              </div>
-
-              <ChevronDown
-                size={16}
-                className={`text-gray-400 transition-transform duration-200 group-hover:text-gray-600 ${
-                  userDropdownOpen ? 'rotate-180' : ''
-                }`}
-              />
-            </button>
-
-            {userDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 text-xs">
-                <div className="border-b border-slate-100 px-3 py-2.5">
-                  <p className="font-bold text-slate-900">Nam Khang Ha</p>
-                  <p className="text-slate-400 text-xs">namkhang@uit.edu.vn</p>
-                  <div className="mt-1.5 inline-flex items-center rounded-md bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700">
-                    uit - Quản trị viên
-                  </div>
-                </div>
-
-                <div className="py-1 space-y-0.5">
-                  <Link
-                    to="/nguoi-phu-trach"
-                    onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-teal-700"
-                  >
-                    <User size={15} className="text-slate-400" />
-                    <span>Hồ sơ người phụ trách</span>
-                  </Link>
-
-                  <Link
-                    to="/bao-cao"
-                    onClick={() => setUserDropdownOpen(false)}
-                    className="flex items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-slate-700 transition-colors hover:bg-slate-50 hover:text-teal-700"
-                  >
-                    <Settings size={15} className="text-slate-400" />
-                    <span>Cấu hình báo cáo</span>
-                  </Link>
-                </div>
-
-                <div className="border-t border-slate-100 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setUserDropdownOpen(false)
-                      alert('Đã đăng xuất phiên làm việc của Nam Khang Ha.')
-                    }}
-                    className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2 font-medium text-rose-600 transition-colors hover:bg-rose-50"
-                  >
-                    <LogOut size={15} />
-                    <span>Đăng xuất</span>
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
         </div>
       </div>
     </header>

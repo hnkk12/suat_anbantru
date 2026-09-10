@@ -4,9 +4,10 @@ import Sidebar from './Sidebar'
 
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] text-gray-800 antialiased flex flex-col">
+    <div className="flex h-screen flex-col overflow-hidden bg-[#f7f7f5] text-gray-800 antialiased">
       {/* Top Navbar: cố định ở đỉnh */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
@@ -14,17 +15,17 @@ export default function AppLayout({ children }) {
       />
 
       {/* Main Layout Container (Sidebar + Content) */}
-      <div className="flex flex-1 overflow-hidden">
+      <div className="flex min-h-0 flex-1 overflow-hidden">
         {/* Sidebar Navigation */}
         <Sidebar
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
+          collapsed={sidebarCollapsed}
+          onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
         />
 
         {/* Main Content Area: nhận nội dung linh hoạt qua children */}
-        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-          {children}
-        </main>
+        <main className="min-w-0 flex-1 overflow-y-auto"><div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div></main>
       </div>
     </div>
   )

@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import { ArrowUpDown, Filter, Pencil, Plus, Trash2 } from 'lucide-react'
+import { ArrowUpDown, CalendarCheck, Download, FileSpreadsheet, Filter, Pencil, Plus, Trash2, Upload } from 'lucide-react'
 import { useApp } from '../../context/AppContext'
 import Button from '../../components/ui/Button'
 import Modal from '../../components/ui/Modal'
@@ -20,6 +20,7 @@ export default function StudentsTab() {
   const [modalOpen, setModalOpen] = useState(false)
   const [editingId, setEditingId] = useState(null)
   const [form, setForm] = useState(emptyForm)
+  const [selectedIds, setSelectedIds] = useState(new Set())
 
   const filtered = useMemo(() => {
     const term = searchTerm.trim().toLowerCase()
@@ -48,6 +49,23 @@ export default function StudentsTab() {
     else addStudent(form)
     setModalOpen(false)
   }
+  const allSelected = filtered.length > 0 && filtered.every((student) => selectedIds.has(student.id))
+  function toggleStudent(id) {
+    setSelectedIds((current) => {
+      const next = new Set(current)
+      if (next.has(id)) next.delete(id)
+      else next.add(id)
+      return next
+    })
+  }
+  function toggleAll() {
+    setSelectedIds((current) => {
+      const next = new Set(current)
+      if (allSelected) filtered.forEach((student) => next.delete(student.id))
+      else filtered.forEach((student) => next.add(student.id))
+      return next
+    })
+  }
 
   return (
     <div className="space-y-4">
@@ -55,17 +73,15 @@ export default function StudentsTab() {
         <span className="text-sm text-gray-500">
           Hiển thị <span className="font-semibold text-gray-700">{filtered.length}</span> / {students.length} học sinh
         </span>
-        <Button onClick={openAdd}>
-          <Plus size={16} />
-          Thêm học sinh
-        </Button>
+        <div className="flex flex-wrap gap-2"><Button size="sm" variant="secondary" disabled title="Chưa có service import"><Upload size={14} />Import HS</Button><Button size="sm" variant="secondary" disabled title="Chưa có service tải mẫu"><Download size={14} />Tải mẫu</Button><Button size="sm" variant="secondary" disabled title="Chưa có service export"><FileSpreadsheet size={14} />Xuất Excel</Button><Button size="sm" variant="secondary" disabled title="Chưa có service export"><FileSpreadsheet size={14} />Xuất Excel theo khoảng ngày</Button><Button onClick={openAdd}><Plus size={16} />Thêm học sinh</Button><Button size="sm" variant="secondary" disabled={!selectedIds.size} title="Chưa có flow điểm danh"><CalendarCheck size={14} />Điểm danh</Button><Button size="sm" variant="secondary" disabled title="Chưa có flow điểm danh tổng"><CalendarCheck size={14} />Điểm danh tổng</Button></div>
       </div>
 
       <div className="flex items-center justify-between gap-3">
         <label className="flex items-center gap-2 text-sm text-gray-600">
-          <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-teal-800 focus:ring-teal-700" />
+          <input type="checkbox" checked={allSelected} onChange={toggleAll} className="h-4 w-4 rounded border-gray-300 text-teal-800 focus:ring-teal-700" />
           Chọn tất cả
         </label>
+        {selectedIds.size > 0 && <span className="text-xs font-semibold text-teal-700">Đã chọn {selectedIds.size} học sinh</span>}
         <button
           type="button"
           className="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 hover:bg-gray-50"
@@ -79,7 +95,7 @@ export default function StudentsTab() {
         <table className="min-w-full divide-y divide-gray-100 text-sm">
           <thead className="bg-gray-50">
             <tr>
-              {['#', 'Họ và tên', 'Lớp', 'Ngày sinh', 'Phụ huynh', 'SĐT', 'Trạng thái bán trú', ''].map((h, idx) => (
+              {['', '#', 'Họ và tên', 'Lớp', 'Ngày sinh', 'Phụ huynh', 'SĐT', 'Trạng thái bán trú', ''].map((h, idx) => (
                 <th key={h} className="px-4 py-3 text-left text-xs font-semibold text-gray-500">
                   {h ? (
                     <span className="inline-flex items-center gap-1">
@@ -96,6 +112,7 @@ export default function StudentsTab() {
           <tbody className="divide-y divide-gray-100">
             {filtered.map((s, idx) => (
               <tr key={s.id} className="hover:bg-gray-50">
+                <td className="px-4 py-3"><input type="checkbox" checked={selectedIds.has(s.id)} onChange={() => toggleStudent(s.id)} className="h-4 w-4 rounded border-gray-300 text-teal-800 focus:ring-teal-700" /></td>
                 <td className="px-4 py-3 text-gray-500">{idx + 1}</td>
                 <td className="px-4 py-3 font-medium text-gray-900">{s.hoTen}</td>
                 <td className="px-4 py-3 text-gray-600">{s.lop}</td>
@@ -119,7 +136,7 @@ export default function StudentsTab() {
             ))}
             {filtered.length === 0 && (
               <tr>
-                <td colSpan={8} className="px-4 py-16 text-center">
+                <td colSpan={9} className="px-4 py-16 text-center">
                   <p className="text-sm font-semibold text-gray-900">Không tìm thấy học sinh</p>
                   <p className="mt-1 text-sm text-gray-500">Thử thay đổi từ khoá tìm kiếm hoặc bộ lọc.</p>
                 </td>
