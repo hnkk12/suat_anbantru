@@ -52,7 +52,7 @@ export default function AttendanceSummary({
   return (
     <div className="space-y-3">
       <div>
-        <h2 className="text-sm font-bold tracking-tight text-slate-900">
+        <h2 className="text-lg font-semibold tracking-tight text-[#20211f]">
           Thống kê điểm danh bán trú
         </h2>
         <p className="text-xs text-slate-500">
@@ -70,7 +70,7 @@ export default function AttendanceSummary({
             onKeyDown={(e) => {
               if (e.key === 'Enter') handleCardClick(item)
             }}
-            className="group flex cursor-pointer items-center justify-between rounded-xl border border-gray-200 bg-white p-4 transition-colors hover:border-gray-300"
+            className="group flex min-h-28 cursor-pointer items-center justify-between rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-[#bfc1bc] hover:shadow-sm"
           >
             <div>
               <span className="text-xs font-medium text-gray-500">{item.title}</span>
@@ -78,7 +78,7 @@ export default function AttendanceSummary({
                 <div className="mt-1 h-5 w-16 animate-pulse rounded bg-gray-100" />
               ) : (
                 <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-xl font-bold text-gray-900">
+                  <span className="text-2xl font-semibold tracking-tight text-[#20211f]">
                     {item.count}
                   </span>
                   <span className="text-xs font-medium text-gray-400">học sinh</span>

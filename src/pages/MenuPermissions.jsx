@@ -64,7 +64,7 @@ export default function MenuPermissions() {
   const { teachers, managerInfo } = useApp()
   const navigate = useNavigate()
   const initialAccounts = useMemo(() => [
-    { id: 'acc-admin', name: 'Nam Khang Ha', username: 'namkhang', role: 'Tài khoản hệ thống', roleKey: 'admin', email: 'namkhang@uit.edu.vn', initials: 'NK' },
+    { id: 'acc-admin', name: 'Lê Hiếu Huy', username: 'lehieuhuy', role: 'Tài khoản hệ thống', roleKey: 'admin', email: 'lehieuhuy@uit.edu.vn', initials: 'LH' },
     { id: 'acc-manager', name: managerInfo?.hoTen || 'Đỗ Thị Thanh Tâm', username: managerInfo?.email, role: managerInfo?.chucVu || 'Quản lý bán trú', roleKey: 'manager', email: managerInfo?.email, initials: 'TT' },
     ...teachers.map((t) => ({ id: `acc-t-${t.id}`, name: t.hoTen, username: t.email, role: `Giáo viên chủ nhiệm (${t.lop})`, roleKey: 'teacher', email: t.email, initials: t.hoTen.split(' ').at(-1)?.slice(0, 2).toUpperCase() || 'GV' })),
     { id: 'acc-caterer', name: 'Công ty TNHH Suất ăn An Lành', username: 'anlanh.catering', role: 'Đối tác cung cấp suất ăn', roleKey: 'caterer', email: 'anlanh.catering@gmail.com', initials: 'AL' },
@@ -90,6 +90,10 @@ export default function MenuPermissions() {
   }, [accounts, query])
   const summary = useMemo(() => Object.fromEntries(ACTIONS.map((a) => [a.key, MENUS.filter((m) => draft[m.id]?.[a.key]).length])), [draft])
   const enabledMenus = MENUS.filter((m) => ACTIONS.some((a) => draft[m.id]?.[a.key])).length
+
+  useEffect(() => {
+    setAccounts((previous) => previous.map((account) => account.id === 'acc-admin' ? { ...account, name: 'Lê Hiếu Huy', username: 'lehieuhuy', email: 'lehieuhuy@uit.edu.vn', initials: 'LH' } : account))
+  }, [setAccounts])
 
   useEffect(() => {
     const unload = (event) => { if (dirty) { event.preventDefault(); event.returnValue = '' } }
@@ -142,7 +146,7 @@ export default function MenuPermissions() {
 
   return <div className="space-y-5 pb-24">
     {toast && <div className={`fixed bottom-6 right-6 z-50 rounded-xl px-4 py-3 text-xs font-semibold text-white shadow-xl ${toast.ok ? 'bg-teal-700' : 'bg-rose-700'}`}>{toast.text}</div>}
-    <header><div className="flex items-center gap-2"><h1 className="font-display text-3xl font-bold text-slate-900">Phân quyền menu</h1><span className="rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700">Quản trị bảo mật</span></div><p className="mt-1 text-sm text-slate-500">Thiết lập quyền thao tác trên từng module cho tài khoản trong hệ thống bán trú.</p></header>
+    <header className="py-1"><div className="flex items-center gap-2"><h1 className="font-display text-2xl font-semibold tracking-[-0.025em] text-[#20211f] sm:text-[28px]">Phân quyền menu</h1><span className="rounded-full border border-teal-200 bg-teal-50 px-2 py-0.5 text-xs font-semibold text-teal-700">Quản trị bảo mật</span></div><p className="mt-1 text-sm leading-6 text-[#676a65]">Thiết lập quyền thao tác trên từng module cho tài khoản trong hệ thống bán trú.</p></header>
     <div className="grid items-start gap-5 lg:grid-cols-[300px_minmax(0,1fr)]">
       <section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
         <div className="flex items-center justify-between border-b border-slate-100 p-4"><div><h2 className="text-sm font-bold">Tài khoản</h2><p className="text-xs text-slate-500">Chọn tài khoản để cấu hình quyền</p></div><button onClick={() => setAddOpen(true)} className="flex items-center gap-1 rounded-lg bg-teal-900 px-2.5 py-1.5 text-xs font-semibold text-white shadow-sm transition-colors hover:bg-teal-950"><Plus size={13} /> Thêm mới</button></div>

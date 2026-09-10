@@ -1,7 +1,6 @@
 import { useState, useMemo } from 'react'
 import { useApp } from '../context/AppContext'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
-import SetupProgress from '../components/dashboard/SetupProgress'
 import OverviewStats from '../components/dashboard/OverviewStats'
 import AttendanceSummary from '../components/dashboard/AttendanceSummary'
 import TodayMenu from '../components/dashboard/TodayMenu'
@@ -65,9 +64,6 @@ export default function DashboardPlaceholder() {
         onResetToday={() => setSelectedDate('2026-09-09')}
       />
 
-      {/* 1.5. Tiến độ thiết lập hệ thống (kiểu Payroll setup progress) */}
-      <SetupProgress />
-
       {/* Thông báo lỗi nếu toàn trang gặp sự cố kết nối */}
       {hasError && (
         <div className="flex items-center justify-between rounded-xl border border-rose-200 bg-rose-50/70 p-4 text-xs text-rose-800 shadow-xs">
@@ -123,7 +119,7 @@ export default function DashboardPlaceholder() {
 
         {/* Cột phải (7/12 ~ 55-58%): Khối Đánh giá (Tabs: Đánh giá học sinh | Đánh giá phụ huynh) */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="flex flex-1 flex-col justify-between rounded-xl border border-slate-200/90 bg-white p-5 shadow-xs">
+          <div className="flex flex-1 flex-col justify-between rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-xs">
             <div>
               {/* Tab Navigation Header */}
               <div className="flex items-center justify-between border-b border-slate-200/80">
@@ -134,7 +130,7 @@ export default function DashboardPlaceholder() {
                     onClick={() => setActiveRatingsTab('hoc-sinh')}
                     className={`relative pb-3 text-xs sm:text-sm transition-colors ${
                       activeRatingsTab === 'hoc-sinh'
-                        ? 'font-semibold text-gray-900 border-b-2 border-pink-600'
+                        ? 'font-semibold text-gray-900 border-b-2 border-teal-700'
                         : 'font-medium text-slate-500 hover:text-slate-800'
                     }`}
                   >
@@ -147,7 +143,7 @@ export default function DashboardPlaceholder() {
                     onClick={() => setActiveRatingsTab('phu-huynh')}
                     className={`relative pb-3 text-xs sm:text-sm transition-colors ${
                       activeRatingsTab === 'phu-huynh'
-                        ? 'font-semibold text-gray-900 border-b-2 border-pink-600'
+                        ? 'font-semibold text-gray-900 border-b-2 border-teal-700'
                         : 'font-medium text-slate-500 hover:text-slate-800'
                     }`}
                   >

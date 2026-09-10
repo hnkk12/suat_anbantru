@@ -4,7 +4,6 @@ import {
   Menu,
   Bell,
   QrCode,
-  HelpCircle,
   CheckCircle2,
   AlertCircle,
 } from 'lucide-react'
@@ -21,7 +20,7 @@ function useOutsideClick(ref, handler) {
   }, [ref, handler])
 }
 
-export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suất Ăn Bán Trú' }) {
+export default function Navbar({ onToggleSidebar, onToggleSidebarCollapse, schoolName = 'Quản Lý Suất Ăn Bán Trú' }) {
   const [notificationOpen, setNotificationOpen] = useState(false)
   const [qrOpen, setQrOpen] = useState(false)
   const [qrImageUnavailable, setQrImageUnavailable] = useState(false)
@@ -57,7 +56,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
   ]
 
   return (
-    <header className="sticky top-0 z-40 h-16 border-b border-gray-200 bg-white">
+    <header className="sticky top-0 z-40 h-16 shrink-0 border-b border-[#dedfda] bg-white/95 backdrop-blur-md">
       <div className="flex h-full items-center justify-between px-4 sm:px-6">
         {/* Left section: Hamburger button + Wordmark logo */}
         <div className="flex items-center gap-3 sm:gap-4">
@@ -70,8 +69,17 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
             <Menu size={20} />
           </button>
 
+          <button
+            type="button"
+            onClick={onToggleSidebarCollapse}
+            aria-label="Thu gọn hoặc mở rộng sidebar"
+            title="Thu gọn hoặc mở rộng sidebar"
+            className="hidden h-9 w-9 items-center justify-center rounded-xl border border-transparent text-gray-500 transition-all hover:border-[#d9dad5] hover:bg-[#f7f7f4] hover:text-teal-800 lg:flex"
+          >
+            <Menu size={20} />
+          </button>
           <Link to="/" className="flex items-center">
-            <span className="font-display text-xl sm:text-2xl font-semibold tracking-tight text-teal-900">
+            <span className="font-display text-xl font-semibold tracking-[-0.03em] text-teal-900 sm:text-2xl">
               {schoolName}
             </span>
           </Link>
@@ -99,7 +107,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
             </button>
 
             {notificationOpen && (
-              <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl border border-slate-200 bg-white p-2 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100">
+              <div className="absolute right-0 mt-2 w-80 rounded-2xl border border-[#d9dad5] bg-white p-2 shadow-[0_16px_44px_rgba(23,35,32,0.14)] animate-in fade-in-50 zoom-in-95 duration-100 sm:w-96">
                 <div className="flex items-center justify-between border-b border-slate-100 px-3 py-2.5">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-semibold text-slate-900">Thông báo mới</span>
@@ -174,7 +182,7 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
             </button>
 
             {qrOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-4 text-center shadow-xl animate-in fade-in-50 zoom-in-95 duration-100">
+              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-[#d9dad5] bg-white p-4 text-center shadow-[0_16px_44px_rgba(23,35,32,0.14)] animate-in fade-in-50 zoom-in-95 duration-100">
                 <div className="mx-auto flex h-40 w-40 items-center justify-center rounded-xl border border-slate-100 bg-white p-2 shadow-sm">
                   {!qrImageUnavailable ? (
                     <img
@@ -194,15 +202,6 @@ export default function Navbar({ onToggleSidebar, schoolName = 'Quản Lý Suấ
               </div>
             )}
           </div>
-
-          <button
-            type="button"
-            title="Trợ giúp"
-            aria-label="Trợ giúp"
-            className="hidden h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900 sm:flex"
-          >
-            <HelpCircle size={18} strokeWidth={1.9} />
-          </button>
 
         </div>
       </div>

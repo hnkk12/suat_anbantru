@@ -8,13 +8,18 @@
 
 :root {
   color-scheme: light;
+  --app-canvas: #fbfbf9;
+  --app-ink: #20211f;
+  --app-muted: #666a65;
+  --app-border: #d9dad5;
+  --app-teal: #086c68;
 }
 
 body {
   margin: 0;
-  background: #f7f7f5;
+  background: var(--app-canvas);
   font-family: var(--font-sans);
-  color: #1f2937;
+  color: var(--app-ink);
   font-variant-numeric: tabular-nums;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -29,12 +34,47 @@ input, select, textarea, button {
   font-family: inherit;
 }
 
+button, a, input, select, textarea {
+  transition-duration: 160ms;
+}
+
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid rgba(8, 108, 104, 0.42);
+  outline-offset: 2px;
+}
+
+main section.border.bg-white,
+main article.border.bg-white {
+  border-color: var(--app-border);
+  box-shadow: 0 2px 9px rgba(31, 40, 37, 0.045);
+}
+
+main table thead {
+  background: #fafaf8;
+}
+
+main table tbody tr {
+  transition: background-color 140ms ease;
+}
+
+main table tbody tr:hover {
+  background-color: #fbfdfb;
+}
+
+.shadow-xs {
+  box-shadow: 0 1px 3px rgba(31, 40, 37, 0.045);
+}
+
+.shadow-sm {
+  box-shadow: 0 2px 9px rgba(31, 40, 37, 0.055);
+}
+
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
 }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;
+  background: #cfd2cd;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-track {

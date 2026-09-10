@@ -36,7 +36,7 @@ export default function TodayMenu({
     Object.values(dayMenu).some((val) => typeof val === 'string' && val.trim().length > 0)
 
   return (
-    <div className="flex h-full flex-col justify-between rounded-xl border border-slate-200/90 bg-white p-5 shadow-xs">
+    <div className="flex h-full flex-col justify-between rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-xs">
       <div>
         {/* Section Header */}
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">

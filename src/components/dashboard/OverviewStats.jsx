@@ -65,7 +65,7 @@ export default function OverviewStats({
       {cards.map((card) => (
         <div
           key={card.id}
-          className="flex flex-col justify-between rounded-xl border border-slate-200/90 bg-white p-4 shadow-xs transition-shadow hover:shadow-sm"
+          className="flex min-h-32 flex-col justify-between rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:shadow-sm"
         >
           <div>
             <span className="text-xs font-medium text-slate-500 line-clamp-1">{card.label}</span>
@@ -76,7 +76,7 @@ export default function OverviewStats({
               <div className="h-7 w-20 animate-pulse rounded bg-slate-100" />
             ) : (
               <div className="flex items-baseline gap-1.5">
-                <span className="text-2xl font-bold tracking-tight text-slate-900">{card.value}</span>
+                <span className="text-2xl font-semibold tracking-[-0.025em] text-[#20211f]">{card.value}</span>
                 {card.unit && <span className="text-xs font-medium text-slate-400">{card.unit}</span>}
               </div>
             )}

@@ -70,7 +70,7 @@ export default function Dashboard() {
         <StatCard label="Chỉ ngủ bán trú" value={stats.chiNgu} unit="học sinh" hint="Trạng thái bán trú trong ngày" />
       </div>
 
-      <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
+      <div className="rounded-2xl border border-[#d9dad5] bg-white shadow-sm">
         <div className="flex items-center gap-2 px-4 pt-2">
           <button
             type="button"

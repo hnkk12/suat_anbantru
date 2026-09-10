@@ -15,8 +15,6 @@ import {
   ShieldCheck,
   Settings,
   LogOut,
-  PanelLeftClose,
-  PanelLeftOpen,
 } from 'lucide-react'
 
 // Cấu hình danh sách menu chính — đúng thứ tự theo yêu cầu
@@ -72,7 +70,7 @@ const SHORTCUT_NAV_ITEMS = [
   },
 ]
 
-export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }) {
+export default function Sidebar({ isOpen, onClose, collapsed }) {
   const location = useLocation()
   const [accountOpen, setAccountOpen] = useState(false)
   const accountRef = useRef(null)
@@ -100,7 +98,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }
 
       {/* Sidebar Container */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex h-full w-72 flex-col border-r border-slate-200 bg-white shadow-lg transition-all duration-300 ease-in-out lg:static lg:z-0 lg:shrink-0 lg:translate-x-0 lg:border-r lg:shadow-none ${collapsed ? 'lg:w-[76px]' : 'lg:w-64'} ${
+        className={`fixed inset-y-0 left-0 z-50 flex h-full w-72 flex-col border-r border-[#dedfda] bg-white shadow-lg transition-all duration-300 ease-in-out lg:static lg:z-0 lg:shrink-0 lg:translate-x-0 lg:border-r lg:shadow-none ${collapsed ? 'lg:w-[76px]' : 'lg:w-64'} ${
           isOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -118,7 +116,7 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }
         </div>
 
         {/* Navigation Content Area (Scrollable) */}
-        <div className="flex-1 space-y-5 overflow-y-auto px-3 py-5">
+        <div className="flex-1 space-y-6 overflow-y-auto px-3 py-5">
           {/* Main Navigation Section */}
           <nav className="space-y-0.5">
             {MAIN_NAV_ITEMS.map((item) => {
@@ -132,8 +130,8 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }
                   onClick={onClose}
                   className={`group flex items-center rounded-lg py-2 text-sm transition-colors duration-100 ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} ${
                     isActive
-                      ? 'font-semibold text-teal-800'
-                      : 'font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-teal-50/80 font-semibold text-teal-900'
+                      : 'font-medium text-[#5d615c] hover:bg-[#f5f6f3] hover:text-[#20211f]'
                   }`}
                 >
                   <Icon
@@ -171,8 +169,8 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }
                     onClick={onClose}
                     className={`group flex items-center rounded-lg py-2 text-sm transition-colors duration-100 ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} ${
                       isActive
-                        ? 'font-semibold text-teal-800'
-                        : 'font-medium text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-teal-50/80 font-semibold text-teal-900'
+                        : 'font-medium text-[#5d615c] hover:bg-[#f5f6f3] hover:text-[#20211f]'
                     }`}
                   >
                     <Icon
@@ -191,15 +189,14 @@ export default function Sidebar({ isOpen, onClose, collapsed, onToggleCollapse }
         </div>
 
         {/* Bottom-left: Organization & User Information Card (Shortcut tới Quản lý phân quyền) */}
-        <div className={`hidden border-t border-slate-200 px-3 pt-2 lg:flex ${collapsed ? 'justify-center' : 'justify-end'}`}><button type="button" onClick={onToggleCollapse} aria-label={collapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'} title={collapsed ? 'Mở rộng sidebar' : 'Thu gọn sidebar'} className="flex h-8 w-8 items-center justify-center rounded-lg text-slate-400 transition-colors hover:bg-teal-50 hover:text-teal-700">{collapsed ? <PanelLeftOpen size={17} /> : <PanelLeftClose size={17} />}</button></div>
-        <div ref={accountRef} className="relative bg-slate-50/60 p-3">
-          {accountOpen && <div className="absolute bottom-full left-3 right-3 mb-2 rounded-xl border border-slate-200 bg-white p-1.5 text-sm shadow-xl"><Link to="/phan-quyen-menu" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><ShieldCheck size={16} />Phân quyền menu</Link><Link to="/cai-dat" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><Settings size={16} />Cài đặt</Link><div className="my-1 border-t border-slate-100" /><button type="button" onClick={() => { setAccountOpen(false); alert('Đã đăng xuất phiên làm việc của Nam Khang Ha.') }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-rose-600 hover:bg-rose-50"><LogOut size={16} />Đăng xuất</button></div>}
+        <div ref={accountRef} className="relative border-t border-[#e5e6e1] bg-[#fafaf8] p-3">
+          {accountOpen && <div className="absolute bottom-full left-3 right-3 mb-2 rounded-xl border border-slate-200 bg-white p-1.5 text-sm shadow-xl"><Link to="/phan-quyen-menu" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><ShieldCheck size={16} />Phân quyền menu</Link><Link to="/cai-dat" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><Settings size={16} />Cài đặt</Link><div className="my-1 border-t border-slate-100" /><button type="button" onClick={() => { setAccountOpen(false); alert('Đã đăng xuất phiên làm việc của Lê Hiếu Huy.') }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-rose-600 hover:bg-rose-50"><LogOut size={16} />Đăng xuất</button></div>}
           <button
             type="button"
             aria-label="Mở menu tài khoản"
             aria-expanded={accountOpen}
             onClick={() => setAccountOpen((value) => !value)}
-            className="group flex w-full items-center justify-between gap-2.5 rounded-xl border border-slate-200/80 bg-white p-2.5 text-left shadow-xs transition-all hover:border-teal-500/60 hover:bg-teal-50/40 hover:shadow-sm"
+            className="group flex w-full items-center justify-between gap-2.5 rounded-xl border border-[#d9dad5] bg-white p-2.5 text-left shadow-xs transition-all hover:border-teal-600/50 hover:bg-teal-50/40 hover:shadow-sm"
           >
             {/* Square avatar with abbreviation 'ui' */}
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-slate-900 to-slate-700 font-bold uppercase tracking-wider text-white shadow-xs group-hover:scale-105 transition-transform">

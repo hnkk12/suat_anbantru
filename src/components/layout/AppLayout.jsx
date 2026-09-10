@@ -7,10 +7,11 @@ export default function AppLayout({ children }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[#f7f7f5] text-gray-800 antialiased">
+    <div className="flex h-screen flex-col overflow-hidden bg-[#fbfbf9] text-[#20211f] antialiased">
       {/* Top Navbar: cố định ở đỉnh */}
       <Navbar
         onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+        onToggleSidebarCollapse={() => setSidebarCollapsed((value) => !value)}
         schoolName="bántrú"
       />
 
@@ -21,11 +22,10 @@ export default function AppLayout({ children }) {
           isOpen={sidebarOpen}
           onClose={() => setSidebarOpen(false)}
           collapsed={sidebarCollapsed}
-          onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
         />
 
         {/* Main Content Area: nhận nội dung linh hoạt qua children */}
-        <main className="min-w-0 flex-1 overflow-y-auto"><div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 lg:px-8">{children}</div></main>
+        <main className="min-w-0 flex-1 overflow-y-auto"><div className="mx-auto w-full max-w-[1440px] px-4 py-7 sm:px-7 lg:px-10 lg:py-9">{children}</div></main>
       </div>
     </div>
   )
