@@ -128,7 +128,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                   key={item.to}
                   to={item.to}
                   onClick={onClose}
-                  className={`group flex items-center rounded-lg py-2 text-sm transition-colors duration-100 ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} ${
+                  className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-100 ${collapsed ? 'lg:justify-center lg:gap-0 lg:px-2' : ''} ${
                     isActive
                       ? 'bg-teal-50/80 font-semibold text-teal-900'
                       : 'font-medium text-[#5d615c] hover:bg-[#f5f6f3] hover:text-[#20211f]'
@@ -141,7 +141,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                       isActive ? 'text-teal-800' : 'text-gray-400 group-hover:text-gray-600'
                     }`}
                   />
-                  <span className={collapsed ? 'hidden' : 'truncate'}>{item.name}</span>
+                  <span className={`truncate ${collapsed ? 'lg:hidden' : ''}`}>{item.name}</span>
                 </NavLink>
               )
             })}
@@ -151,7 +151,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
           {/* Shortcuts / Secondary Navigation Section */}
           <div>
-            <div className={`flex items-center justify-between px-3 pb-1.5 ${collapsed ? 'hidden' : ''}`}>
+            <div className={`flex items-center justify-between px-3 pb-1.5 ${collapsed ? 'lg:hidden' : ''}`}>
               <span className="text-xs font-semibold text-gray-400">Shortcuts</span>
             </div>
             <nav className="space-y-0.5">
@@ -167,7 +167,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                     key={item.to}
                     to={item.to}
                     onClick={onClose}
-                    className={`group flex items-center rounded-lg py-2 text-sm transition-colors duration-100 ${collapsed ? 'justify-center px-2' : 'gap-3 px-3'} ${
+                    className={`group flex items-center gap-3 rounded-lg px-3 py-2 text-sm transition-colors duration-100 ${collapsed ? 'lg:justify-center lg:gap-0 lg:px-2' : ''} ${
                       isActive
                         ? 'bg-teal-50/80 font-semibold text-teal-900'
                         : 'font-medium text-[#5d615c] hover:bg-[#f5f6f3] hover:text-[#20211f]'
@@ -180,7 +180,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
                         isActive ? 'text-teal-800' : 'text-gray-400 group-hover:text-gray-600'
                       }`}
                     />
-                  <span className={collapsed ? 'hidden' : 'truncate'}>{item.name}</span>
+                  <span className={`truncate ${collapsed ? 'lg:hidden' : ''}`}>{item.name}</span>
                   </NavLink>
                 )
               })}
@@ -190,7 +190,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
 
         {/* Bottom-left: Organization & User Information Card (Shortcut tới Quản lý phân quyền) */}
         <div ref={accountRef} className="relative border-t border-[#e5e6e1] bg-[#fafaf8] p-3">
-          {accountOpen && <div className="absolute bottom-full left-3 right-3 mb-2 rounded-xl border border-slate-200 bg-white p-1.5 text-sm shadow-xl"><Link to="/phan-quyen-menu" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><ShieldCheck size={16} />Phân quyền menu</Link><Link to="/cai-dat" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><Settings size={16} />Cài đặt</Link><div className="my-1 border-t border-slate-100" /><button type="button" onClick={() => { setAccountOpen(false); alert('Đã đăng xuất phiên làm việc của Lê Hiếu Huy.') }} className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-rose-600 hover:bg-rose-50"><LogOut size={16} />Đăng xuất</button></div>}
+          {accountOpen && <div className={`absolute z-50 rounded-xl border border-[#d9dad5] bg-white p-1.5 text-sm shadow-[0_14px_36px_rgba(23,35,32,0.16)] ${collapsed ? 'bottom-full left-3 right-3 mb-2 lg:bottom-0 lg:left-full lg:right-auto lg:mb-0 lg:ml-2 lg:w-60' : 'bottom-full left-3 right-3 mb-2'}`}><Link to="/phan-quyen-menu" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><ShieldCheck size={16} />Phân quyền menu</Link><Link to="/cai-dat" onClick={() => { setAccountOpen(false); onClose() }} className="flex items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-slate-700 hover:bg-teal-50 hover:text-teal-800"><Settings size={16} />Cài đặt</Link><div className="my-1 border-t border-slate-100" /><button type="button" onClick={() => { setAccountOpen(false); alert('Đã đăng xuất phiên làm việc của Lê Hiếu Huy.') }} className="flex w-full items-center gap-2.5 whitespace-nowrap rounded-lg px-3 py-2 text-left text-rose-600 hover:bg-rose-50"><LogOut size={16} />Đăng xuất</button></div>}
           <button
             type="button"
             aria-label="Mở menu tài khoản"
@@ -204,7 +204,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
             </div>
 
             {/* School / Organization info */}
-            <div className={`min-w-0 flex-1 ${collapsed ? 'hidden' : ''}`}>
+            <div className={`min-w-0 flex-1 ${collapsed ? 'lg:hidden' : ''}`}>
               <div className="flex items-center gap-1.5">
                 <p className="truncate text-xs font-bold text-slate-900 group-hover:text-teal-900 transition-colors">uit</p>
                 <span className="shrink-0 rounded-md bg-slate-100 px-1.5 py-0.2 text-xs font-semibold text-slate-600 group-hover:bg-teal-50 group-hover:text-teal-700 transition-colors">
@@ -220,7 +220,7 @@ export default function Sidebar({ isOpen, onClose, collapsed }) {
             {/* Chevron indicator */}
             <ChevronRight
               size={15}
-              className={`shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-teal-600 ${collapsed ? 'hidden' : ''}`}
+              className={`shrink-0 text-slate-300 transition-all group-hover:translate-x-0.5 group-hover:text-teal-600 ${collapsed ? 'lg:hidden' : ''}`}
             />
           </button>
         </div>
