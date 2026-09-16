@@ -1,8 +1,6 @@
-import { useState } from 'react'
-import { FileText, Plus, Trash2, Download, UploadCloud } from 'lucide-react'
+import { useState, useMemo } from 'react'
+import { FileText, Plus, Trash2, Download, UploadCloud, Search } from 'lucide-react'
 import { useApp } from '../context/AppContext'
-import PageHeader from '../components/layout/PageHeader'
-import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Modal from '../components/ui/Modal'
 import Badge from '../components/ui/Badge'
@@ -18,8 +16,19 @@ function formatSize(bytes) {
 export default function Documents() {
   const { documents, addDocument, removeDocument } = useApp()
   const [modalOpen, setModalOpen] = useState(false)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [typeFilter, setTypeFilter] = useState('Tất cả')
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
+
+  const filtered = useMemo(() => {
+    const term = searchTerm.trim().toLowerCase()
+    return documents.filter((d) => {
+      const matchSearch = !term || d.ten?.toLowerCase().includes(term)
+      const matchType = typeFilter === 'Tất cả' || d.loai === typeFilter
+      return matchSearch && matchType
+    })
+  }, [documents, searchTerm, typeFilter])
 
   function handleSubmit(e) {
     e.preventDefault()
@@ -38,79 +47,143 @@ export default function Documents() {
   }
 
   return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Văn bản liên quan"
-        description="Lưu trữ các văn bản, quy định, mẫu biểu liên quan đến công tác bán trú của trường."
-        controls={
-          <Button onClick={() => setModalOpen(true)}>
-            <Plus size={16} />
-            Thêm văn bản
-          </Button>
-        }
-      />
+    <div className="flex flex-col gap-5.5">
+      {/* Page Header */}
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="text-[24px] font-semibold tracking-[-0.02em] text-[#1c1d1b]">
+            Văn bản liên quan
+          </h1>
+          <p className="mt-1.5 max-w-[480px] text-[13.5px] leading-relaxed text-[#6b6f68]">
+            Văn bản, quy định và mẫu hợp đồng liên quan đến bán trú.
+          </p>
+        </div>
 
-      <Card title="Danh sách văn bản" description={`${documents.length} tài liệu`}>
-        <div className="divide-y divide-gray-100">
-          {documents.map((d) => (
-            <div key={d.id} className="flex items-center justify-between gap-3 py-4 first:pt-0 last:pb-0">
-              <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-teal-50 text-teal-600">
-                  <FileText size={18} />
+        <div className="flex flex-wrap items-center gap-2.5">
+          <div className="relative">
+            <Search
+              size={14}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-[#9a9d96]"
+            />
+            <input
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Tìm văn bản..."
+              className="w-[180px] rounded-[10px] border border-[#d5d7d0] bg-white py-2 pl-8 pr-3 text-[13px] text-[#1c1d1b] outline-none placeholder:text-[#9a9d96] focus:border-[#c84b26]"
+            />
+          </div>
+
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+            className="rounded-[10px] border border-[#d5d7d0] bg-white px-3 py-2 text-[13px] font-medium text-[#1c1d1b] outline-none"
+          >
+            <option value="Tất cả">Tất cả định dạng</option>
+            <option value="PDF">PDF</option>
+            <option value="DOCX">DOCX</option>
+            <option value="XLSX">XLSX</option>
+          </select>
+
+          <Button onClick={() => setModalOpen(true)} size="sm">
+            <Plus size={15} /> Thêm văn bản
+          </Button>
+        </div>
+      </div>
+
+      {/* Document List Card */}
+      <div className="overflow-hidden rounded-[16px] border border-[#e3e4df] bg-white p-5 shadow-xs">
+        <div className="divide-y divide-[#eceeea]">
+          {filtered.map((d) => (
+            <div
+              key={d.id}
+              className="flex items-center justify-between gap-4 py-3.5 first:pt-0 last:pb-0"
+            >
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[8px] bg-[#fdf2ee] text-[#c84b26]">
+                  <FileText size={17} />
                 </div>
-                <div>
-                  <p className="font-medium text-gray-900">{d.ten}</p>
-                  <p className="text-xs text-gray-400">
+                <div className="min-w-0">
+                  <p className="truncate text-[13.5px] font-medium text-[#1c1d1b]">{d.ten}</p>
+                  <p className="text-[12px] text-[#9a9d96]">
                     Đăng ngày {d.ngayDang} · {d.kichThuoc}
                   </p>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
+
+              <div className="flex shrink-0 items-center gap-2">
                 <Badge tone="gray">{d.loai}</Badge>
                 {d.url ? (
                   <a
                     href={d.url}
                     download={d.ten}
-                    className="rounded-lg p-1.5 text-gray-400 hover:bg-gray-100 hover:text-teal-600"
+                    className="rounded-[6px] p-1.5 text-[#8a8d86] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
                     title="Tải xuống"
                   >
                     <Download size={16} />
                   </a>
                 ) : (
-                  <span title="Tài liệu mẫu, chưa gắn file (không có backend lưu trữ)" className="cursor-not-allowed rounded-lg p-1.5 text-gray-300">
+                  <span
+                    title="Tài liệu mẫu"
+                    className="cursor-not-allowed rounded-[6px] p-1.5 text-[#d5d7d0]"
+                  >
                     <Download size={16} />
                   </span>
                 )}
-                <button onClick={() => removeDocument(d.id)} className="rounded-lg p-1.5 text-gray-400 hover:bg-red-50 hover:text-red-600">
+                <button
+                  type="button"
+                  onClick={() => removeDocument(d.id)}
+                  className="rounded-[6px] p-1.5 text-[#8a8d86] hover:bg-rose-50 hover:text-rose-600"
+                  title="Xóa văn bản"
+                >
                   <Trash2 size={16} />
                 </button>
               </div>
             </div>
           ))}
-          {documents.length === 0 && <p className="py-8 text-center text-sm text-gray-400">Chưa có văn bản nào.</p>}
-        </div>
-      </Card>
 
+          {filtered.length === 0 && (
+            <p className="py-12 text-center text-[13px] text-[#9a9d96]">
+              Không có văn bản nào phù hợp.
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Add Document Modal */}
       <Modal
         open={modalOpen}
         onClose={() => setModalOpen(false)}
         title="Thêm văn bản mới"
         footer={
           <>
-            <Button variant="secondary" onClick={() => setModalOpen(false)}>Hủy</Button>
+            <Button variant="neutral" onClick={() => setModalOpen(false)}>
+              Hủy
+            </Button>
             <Button onClick={handleSubmit}>Thêm văn bản</Button>
           </>
         }
       >
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Tên văn bản" value={name} onChange={(e) => setName(e.target.value)} required />
-          <label className="flex flex-col gap-1 text-sm">
-            <span className="text-xs font-medium text-gray-500">File đính kèm (tùy chọn)</span>
-            <div className="flex items-center gap-2 rounded-lg border border-dashed border-gray-300 px-3 py-3 text-sm text-gray-500">
-              <UploadCloud size={16} className="text-gray-400" />
-              <input type="file" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="text-xs" />
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <Input
+            label="Tên văn bản *"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            required
+            placeholder="Ví dụ: Quy định an toàn thực phẩm năm học 2026-2027"
+          />
+
+          <label className="flex flex-col gap-1.5 text-sm">
+            <span className="text-[12px] font-semibold text-[#57605a]">
+              File đính kèm (tùy chọn)
+            </span>
+            <div className="flex items-center gap-2 rounded-[10px] border border-dashed border-[#d5d7d0] bg-[#fafaf8] p-4 text-[13px] text-[#57605a]">
+              <UploadCloud size={18} className="text-[#9a9d96]" />
+              <input
+                type="file"
+                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                className="text-[12px] text-[#57605a]"
+              />
             </div>
-            <span className="text-xs text-gray-400">Lưu ý: file chỉ tồn tại trong phiên làm việc hiện tại vì chưa kết nối máy chủ lưu trữ.</span>
           </label>
         </form>
       </Modal>

@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  html, body { margin: 0; }
+  * { box-sizing: border-box; }
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-thumb { background: #d8dad4; border-radius: 9999px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+</style>
+</helmet>
+
+<div style="display:flex;height:100vh;background:#fbfbf9;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#1c1d1b;overflow:hidden;font-variant-numeric:tabular-nums">
+
+  <aside style="width:264px;flex-shrink:0;background:#ffffff;border-right:1px solid #e6e7e2;display:flex;flex-direction:column;overflow-y:auto">
+    <div style="padding:24px 22px 18px;display:flex;align-items:center;gap:10px">
+      <div style="width:28px;height:28px;border-radius:7px;background:#12433f;display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.02em">BT</div>
+      <span style="font-size:15px;font-weight:600;letter-spacing:-0.01em">Bán trú</span>
+    </div>
+
+    <nav style="padding:6px 14px;display:flex;flex-direction:column;gap:2px">
+      <button type="button" onClick="{{ homeItem.onClick }}" style="{{ homeItem.style }}">{{ homeItem.label }}</button>
+    </nav>
+
+    <div style="height:1px;background:#eceeea;margin:10px 22px"></div>
+
+    <div style="padding:0 14px">
+      <p style="margin:0 0 6px 8px;font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a3a69e;text-transform:uppercase">Quản lý</p>
+      <nav style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ mainNavItems }}" as="item" hint-placeholder-count="5">
+          <button type="button" onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</button>
+        </sc-for>
+      </nav>
+    </div>
+
+    <div style="height:1px;background:#eceeea;margin:14px 22px"></div>
+
+    <div style="padding:0 14px">
+      <p style="margin:0 0 6px 8px;font-size:11px;font-weight:600;letter-spacing:0.04em;color:#a3a69e;text-transform:uppercase">Lối tắt</p>
+      <nav style="display:flex;flex-direction:column;gap:2px">
+        <sc-for list="{{ shortcutNavItems }}" as="item" hint-placeholder-count="4">
+          <button type="button" onClick="{{ item.onClick }}" style="{{ item.style }}">{{ item.label }}</button>
+        </sc-for>
+      </nav>
+    </div>
+
+    <div style="margin-top:auto;padding:16px 20px;border-top:1px solid #eceeea;display:flex;align-items:center;gap:10px">
+      <div style="width:32px;height:32px;border-radius:8px;background:#f0f1ec;border:1px solid #e3e4df;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#5d605a">AD</div>
+      <div style="min-width:0">
+        <p style="margin:0;font-size:13px;font-weight:600;color:#1c1d1b">Admin</p>
+        <p style="margin:0;font-size:12px;color:#8a8d86">Quản trị viên</p>
+      </div>
+    </div>
+  </aside>
+
+  <main style="flex:1;overflow-y:auto">
+    <div style="max-width:1180px;margin:0 auto;padding:44px 48px 64px">
+
+      <sc-if value="{{ viewIsOverview }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:28px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+            <div>
+              <h1 style="margin:0;font-size:26px;font-weight:600;letter-spacing:-0.02em;color:#1c1d1b">Chào buổi sáng, Nam</h1>
+              <p style="margin:6px 0 0;font-size:14px;line-height:1.5;color:#6b6f68;max-width:520px">Tổng quan tình hình học sinh bán trú, điểm danh, thực đơn và đánh giá trong ngày {{ todayFormatted }}.</p>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="display:flex;align-items:center;gap:8px;border:1px solid #d5d7d0;border-radius:10px;padding:9px 12px;background:#fff">
+                <span style="font-size:12px;color:#9a9d96">Ngày</span>
+                <input type="date" value="{{ selectedDate }}" onChange="{{ setDate }}" style="border:none;font-size:13px;font-weight:500;color:#1c1d1b;background:transparent;outline:none;font-family:inherit">
+              </div>
+              <button type="button" onClick="{{ goToStudents }}" style="border:1px solid #d5d7d0;border-radius:10px;padding:10px 16px;background:#fff;font-size:13px;font-weight:600;color:#1c1d1b;cursor:pointer;font-family:inherit">Quản lý học sinh</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+            <sc-for list="{{ kpiCards }}" as="card" hint-placeholder-count="4">
+              <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;box-shadow:0 1px 3px rgba(28,29,27,0.04);padding:20px;display:flex;flex-direction:column;justify-content:space-between;min-height:118px">
+                <span style="font-size:12.5px;color:#6b6f68;font-weight:500">{{ card.label }}</span>
+                <div>
+                  <div style="display:flex;align-items:baseline;gap:6px;margin-top:8px">
+                    <span style="font-size:24px;font-weight:600;letter-spacing:-0.02em">{{ card.value }}</span>
+                    <sc-if value="{{ card.unit }}"><span style="font-size:12px;color:#9a9d96;font-weight:500">{{ card.unit }}</span></sc-if>
+                  </div>
+                  <sc-if value="{{ card.hasProgress }}">
+                    <div style="margin-top:10px;height:5px;border-radius:99px;background:#eceeea;overflow:hidden">
+                      <div style="height:100%;border-radius:99px;background:#12433f;{{ card.progressStyle }}"></div>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <h2 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">Điểm danh bán trú</h2>
+              <p style="margin:2px 0 0;font-size:12.5px;color:#9a9d96">{{ todayFormatted }} · {{ dayLabel }}</p>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px">
+              <sc-for list="{{ attendanceCards }}" as="card" hint-placeholder-count="3">
+                <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;padding:20px;display:flex;align-items:center;justify-content:space-between">
+                  <div>
+                    <span style="font-size:12.5px;color:#6b6f68;font-weight:500">{{ card.label }}</span>
+                    <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px">
+                      <span style="font-size:22px;font-weight:600;letter-spacing:-0.02em">{{ card.count }}</span>
+                      <span style="font-size:12px;color:#9a9d96;font-weight:500">học sinh</span>
+                    </div>
+                  </div>
+                  <span style="font-size:12.5px;font-weight:600;color:#57605a;background:#f2f3ee;border-radius:8px;padding:5px 10px">{{ card.rate }}%</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:5fr 7fr;gap:16px;align-items:stretch">
+            <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;padding:20px;display:flex;flex-direction:column">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1px solid #eceeea;padding-bottom:12px">
+                <div>
+                  <h3 style="margin:0;font-size:14px;font-weight:600">Thực đơn hôm nay</h3>
+                  <p style="margin:3px 0 0;font-size:12px;color:#9a9d96">{{ todayFormatted }} · {{ dayLabel }}</p>
+                </div>
+                <button type="button" onClick="{{ goToMenu }}" style="border:none;background:none;font-size:12.5px;font-weight:600;color:#12433f;cursor:pointer;font-family:inherit">Xem cả tuần</button>
+              </div>
+              <div style="margin-top:14px;display:flex;flex-direction:column;gap:10px;flex:1">
+                <sc-if value="{{ hasTodayMenu }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ todayMeals }}" as="meal" hint-placeholder-count="3">
+                    <div style="border:1px solid #eceeea;border-radius:12px;padding:12px 14px;background:#fafaf8">
+                      <span style="font-size:12px;font-weight:600;color:#57605a;background:#fff;border:1px solid #e3e4df;border-radius:6px;padding:3px 9px">{{ meal.name }}</span>
+                      <div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">
+                        <sc-for list="{{ meal.dishes }}" as="dish" hint-placeholder-count="2">
+                          <span style="font-size:12.5px;color:#3a3c38;background:#fff;border:1px solid #e6e7e2;border-radius:7px;padding:4px 9px">{{ dish }}</span>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-for>
+                </sc-if>
+                <sc-if value="{{ hasTodayMenuFalse }}">
+                  <div style="flex:1;display:flex;align-items:center;justify-content:center;text-align:center;border:1px dashed #dcdedb;border-radius:12px;padding:24px">
+                    <p style="margin:0;font-size:12.5px;color:#9a9d96">Chưa có món ăn cho ngày này.</p>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+
+            <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;padding:20px;display:flex;flex-direction:column">
+              <div style="display:flex;gap:20px;border-bottom:1px solid #eceeea">
+                <button type="button" onClick="{{ setRatingsTabStudent }}" style="{{ tabStudentStyle }}">Đánh giá học sinh</button>
+                <button type="button" onClick="{{ setRatingsTabParent }}" style="{{ tabParentStyle }}">Đánh giá phụ huynh</button>
+              </div>
+
+              <sc-if value="{{ ratingsTabIsStudent }}" hint-placeholder-val="{{ true }}">
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+                  <sc-if value="{{ studentRatings.hasData }}" hint-placeholder-val="{{ true }}">
+                    <div>
+                      <span style="font-size:11px;font-weight:600;letter-spacing:0.03em;color:#9a9d96;text-transform:uppercase">Tổng quát · {{ studentRatings.total }} học sinh</span>
+                      <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+                        <div style="border:1px solid #eceeea;border-radius:12px;padding:12px">
+                          <span style="font-size:12px;color:#6b6f68">Tích cực (Tốt / Khá)</span>
+                          <div style="margin-top:4px;font-size:18px;font-weight:600">{{ studentRatings.positiveCount }} <span style="font-size:12px;font-weight:500;color:#9a9d96">({{ studentRatings.positiveRate }}%)</span></div>
+                        </div>
+                        <div style="border:1px solid #eceeea;border-radius:12px;padding:12px">
+                          <span style="font-size:12px;color:#6b6f68">Cần cải thiện</span>
+                          <div style="margin-top:4px;font-size:18px;font-weight:600">{{ studentRatings.negativeCount }} <span style="font-size:12px;font-weight:500;color:#9a9d96">({{ studentRatings.negativeRate }}%)</span></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div style="border:1px solid #eceeea;border-radius:12px;padding:14px;background:#fafaf8">
+                      <span style="font-size:12px;font-weight:600;color:#3a3c38">Món ăn — mức độ ăn hết suất</span>
+                      <div style="margin-top:10px;display:flex;flex-direction:column;gap:9px">
+                        <sc-for list="{{ studentRatings.dishRatings }}" as="dish" hint-placeholder-count="4">
+                          <div>
+                            <div style="display:flex;justify-content:space-between;font-size:12px">
+                              <span style="color:#3a3c38;font-weight:500">{{ dish.name }}</span>
+                              <span style="color:#12433f;font-weight:600">{{ dish.score }}%</span>
+                            </div>
+                            <div style="margin-top:4px;height:5px;border-radius:99px;background:#e6e7e2;overflow:hidden">
+                              <div style="height:100%;border-radius:99px;background:#12433f;{{ dish.style }}"></div>
+                            </div>
+                          </div>
+                        </sc-for>
+                      </div>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ studentRatings.noData }}">
+                    <div style="border:1px dashed #dcdedb;border-radius:12px;padding:28px;text-align:center">
+                      <p style="margin:0;font-size:12.5px;font-weight:600;color:#3a3c38">Chưa có đánh giá học sinh</p>
+                      <p style="margin:4px 0 0;font-size:12px;color:#9a9d96">Dữ liệu sẽ hiển thị khi có đánh giá trong ngày.</p>
+                    </div>
+                  </sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ ratingsTabIsParent }}">
+                <div style="margin-top:16px;display:flex;flex-direction:column;gap:12px">
+                  <div style="display:flex;align-items:center;gap:12px;border:1px solid #eceeea;border-radius:12px;padding:12px;background:#fafaf8">
+                    <div style="width:44px;height:44px;border-radius:10px;border:1px solid #e3e4df;background:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:700">{{ parentRatings.avg }}</div>
+                    <div>
+                      <span style="font-size:13px;font-weight:600;color:#12433f">{{ parentRatings.stars }}</span>
+                      <p style="margin:2px 0 0;font-size:12px;color:#9a9d96">{{ parentRatings.total }} phản hồi phụ huynh</p>
+                    </div>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:8px;max-height:260px;overflow-y:auto">
+                    <sc-for list="{{ parentRatings.list }}" as="item" hint-placeholder-count="3">
+                      <div style="border:1px solid #eceeea;border-radius:12px;padding:12px">
+                        <div style="display:flex;justify-content:space-between;font-size:12px">
+                          <span style="font-weight:600;color:#1c1d1b">{{ item.phuHuynh }} <span style="font-weight:400;color:#9a9d96">· bé {{ item.hocSinh }} ({{ item.lop }})</span></span>
+                          <span style="color:#12433f;font-weight:600">{{ item.ratingStars }}</span>
+                        </div>
+                        <p style="margin:6px 0 0;font-size:12.5px;color:#57605a;line-height:1.5">{{ item.noiDung }}</p>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewIsStudents }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px">
+            <div>
+              <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em">Học sinh</h1>
+              <p style="margin:6px 0 0;font-size:13.5px;color:#6b6f68;max-width:480px">Danh sách học sinh theo năm học. Dùng ô tìm kiếm để lọc theo tên, lớp hoặc số điện thoại.</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px">
+              <select value="{{ schoolYear }}" onChange="{{ setYear }}" style="border:1px solid #d5d7d0;border-radius:10px;padding:9px 12px;font-size:13px;background:#fff;font-family:inherit;color:#1c1d1b">
+                <sc-for list="{{ schoolYears }}" as="year" hint-placeholder-count="4">
+                  <option value="{{ year }}">Năm học {{ year }}</option>
+                </sc-for>
+              </select>
+              <input value="{{ searchTerm }}" onChange="{{ setSearch }}" placeholder="Tên, lớp, SĐT..." style="border:1px solid #d5d7d0;border-radius:10px;padding:9px 12px;font-size:13px;width:200px;font-family:inherit;outline:none">
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px">
+            <sc-for list="{{ studentStatCards }}" as="card" hint-placeholder-count="4">
+              <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;padding:18px">
+                <span style="font-size:12.5px;color:#6b6f68;font-weight:500">{{ card.label }}</span>
+                <div style="margin-top:6px;font-size:21px;font-weight:600;letter-spacing:-0.02em">{{ card.value }}</div>
+              </div>
+            </sc-for>
+          </div>
+
+          <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead>
+                <tr style="background:#fafaf8">
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Họ tên</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Lớp</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Ngày sinh</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Phụ huynh</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">SĐT</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ filteredStudents }}" as="s" hint-placeholder-count="4">
+                  <tr style="border-bottom:1px solid #eef0ec">
+                    <td style="padding:12px 16px;font-weight:500">{{ s.hoTen }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ s.lop }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ s.ngaySinh }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ s.phuHuynh }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ s.sdt }}</td>
+                    <td style="padding:12px 16px"><span style="font-size:12px;font-weight:600;border-radius:7px;padding:4px 9px;{{ s.statusStyle }}">{{ s.trangThai }}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewIsMenu }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em">Thực đơn</h1>
+            <p style="margin:6px 0 0;font-size:13.5px;color:#6b6f68;max-width:480px">Thực đơn theo tuần cho các bữa ăn bán trú.</p>
+          </div>
+          <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead>
+                <tr style="background:#fafaf8">
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea;width:100px">Ngày</th>
+                  <sc-for list="{{ mealColumns }}" as="meal" hint-placeholder-count="3">
+                    <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">{{ meal }}</th>
+                  </sc-for>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ menuRows }}" as="row" hint-placeholder-count="5">
+                  <tr style="border-bottom:1px solid #eef0ec">
+                    <td style="padding:12px 16px;font-weight:600">{{ row.day }}</td>
+                    <sc-for list="{{ row.cells }}" as="cell" hint-placeholder-count="3">
+                      <td style="padding:12px 16px;color:#57605a;line-height:1.5">{{ cell }}</td>
+                    </sc-for>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewIsManager }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em">Người phụ trách</h1>
+            <p style="margin:6px 0 0;font-size:13.5px;color:#6b6f68;max-width:480px">Thông tin người phụ trách công tác bán trú tại trường.</p>
+          </div>
+          <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;padding:24px;max-width:520px;display:flex;flex-direction:column;gap:16px">
+            <sc-for list="{{ managerFields }}" as="f" hint-placeholder-count="5">
+              <div style="display:flex;justify-content:space-between;gap:16px;border-bottom:1px solid #f1f2ee;padding-bottom:12px">
+                <span style="font-size:13px;color:#9a9d96">{{ f.label }}</span>
+                <span style="font-size:13px;font-weight:500;text-align:right;max-width:280px">{{ f.value }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewIsCompanies }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em">Công ty cung cấp suất ăn</h1>
+            <p style="margin:6px 0 0;font-size:13.5px;color:#6b6f68;max-width:480px">Danh sách đơn vị cung cấp suất ăn bán trú đang hợp tác với trường.</p>
+          </div>
+          <div style="border:1px solid #e3e4df;border-radius:16px;background:#fff;overflow:hidden">
+            <table style="width:100%;border-collapse:collapse;font-size:13px">
+              <thead>
+                <tr style="background:#fafaf8">
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Tên công ty</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Đại diện</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">SĐT</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Địa chỉ</th>
+                  <th style="text-align:left;padding:12px 16px;font-size:11.5px;font-weight:600;color:#9a9d96;text-transform:uppercase;letter-spacing:0.03em;border-bottom:1px solid #eceeea">Trạng thái</th>
+                </tr>
+              </thead>
+              <tbody>
+                <sc-for list="{{ companies }}" as="c" hint-placeholder-count="3">
+                  <tr style="border-bottom:1px solid #eef0ec">
+                    <td style="padding:12px 16px;font-weight:500">{{ c.ten }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ c.daiDien }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ c.sdt }}</td>
+                    <td style="padding:12px 16px;color:#57605a">{{ c.diaChi }}</td>
+                    <td style="padding:12px 16px"><span style="font-size:12px;font-weight:600;border-radius:7px;padding:4px 9px;{{ c.statusStyle }}">{{ c.trangThai }}</span></td>
+                  </tr>
+                </sc-for>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ viewIsStub }}">
+        <div style="display:flex;flex-direction:column;gap:22px">
+          <div>
+            <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em">{{ stubInfo.title }}</h1>
+          </div>
+          <div style="border:1px dashed #dcdedb;border-radius:16px;padding:56px;text-align:center">
+            <p style="margin:0;font-size:13.5px;font-weight:600;color:#3a3c38">Chưa có nội dung</p>
+            <p style="margin:6px 0 0;font-size:13px;color:#9a9d96">{{ stubInfo.description }}</p>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </main>
+</div>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+function formatDateVN(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  return `${dd}/${mm}/${d.getFullYear()}`;
+}
+function getDayOfWeekName(dateStr) {
+  if (!dateStr) return '';
+  const d = new Date(dateStr + 'T00:00:00');
+  const map = ['Chủ nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'];
+  return map[d.getDay()];
+}
+
+const SCHOOL_YEARS = ['2023 - 2024', '2024 - 2025', '2025 - 2026', '2026 - 2027'];
+const SEED_STUDENTS = [
+  { id: 's1', hoTen: 'Nguyễn Minh An', lop: '1A', ngaySinh: '2019-03-12', phuHuynh: 'Nguyễn Văn Bình', sdt: '0901234567', trangThai: 'Bán trú' },
+  { id: 's2', hoTen: 'Trần Bảo Châu', lop: '2A', ngaySinh: '2018-07-25', phuHuynh: 'Trần Văn Cường', sdt: '0912345678', trangThai: 'Bán trú' },
+  { id: 's3', hoTen: 'Lê Gia Hân', lop: 'Lá 1', ngaySinh: '2020-01-05', phuHuynh: 'Lê Thị Dung', sdt: '0923456789', trangThai: 'Chỉ ngủ bán trú' },
+  { id: 's4', hoTen: 'Phạm Đức Huy', lop: 'Lá 2', ngaySinh: '2020-05-18', phuHuynh: 'Phạm Văn Em', sdt: '0934567890', trangThai: 'Không bán trú' },
+];
+const SEED_CLASSES = [
+  { id: 'c1', name: 'Lá 1' }, { id: 'c2', name: 'Lá 2' }, { id: 'c3', name: '1A' }, { id: 'c4', name: '2A' },
+];
+const SEED_COMPANIES = [
+  { ten: 'Công ty TNHH Suất ăn An Lành', daiDien: 'Vũ Văn Phát', sdt: '0281234567', diaChi: '12 Nguyễn Trãi, Q.1, TP.HCM', trangThai: 'Đang hợp tác' },
+  { ten: 'Công ty CP Thực phẩm Sạch Việt', daiDien: 'Hoàng Thị Yến', sdt: '0287654321', diaChi: '45 Lê Lợi, Q.3, TP.HCM', trangThai: 'Đang hợp tác' },
+  { ten: 'Công ty Suất ăn Công nghiệp Minh Phát', daiDien: 'Đặng Văn Sơn', sdt: '0289988776', diaChi: '78 Cách Mạng Tháng 8, Q.10, TP.HCM', trangThai: 'Tạm ngưng' },
+];
+const SEED_MANAGER = {
+  hoTen: 'Đỗ Thị Thanh Tâm', chucVu: 'Phó Hiệu trưởng phụ trách bán trú', sdt: '0909112233',
+  email: 'tam.do@truongtest.edu.vn', ghiChu: 'Phụ trách tiếp nhận phản ánh về suất ăn bán trú của phụ huynh.',
+};
+const DAYS_OF_WEEK = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6'];
+const MEAL_COLUMNS = ['Bữa sáng', 'Bữa trưa', 'Bữa xế'];
+const SEED_MENU = {
+  'Thứ 2': { 'Bữa sáng': 'Cháo thịt bằm, sữa tươi', 'Bữa trưa': 'Cơm, thịt kho trứng, canh bí đỏ', 'Bữa xế': 'Sữa chua, trái cây' },
+  'Thứ 3': { 'Bữa sáng': 'Phở gà', 'Bữa trưa': 'Cơm, cá kho, canh rau ngót', 'Bữa xế': 'Bánh flan' },
+  'Thứ 4': { 'Bữa sáng': 'Bún thịt nướng', 'Bữa trưa': 'Cơm, gà chiên, canh chua', 'Bữa xế': 'Chè đậu xanh' },
+  'Thứ 5': { 'Bữa sáng': 'Súp cua', 'Bữa trưa': 'Cơm, thịt kho tàu, canh cải', 'Bữa xế': 'Sữa tươi, bánh quy' },
+  'Thứ 6': { 'Bữa sáng': 'Bánh mì trứng ốp la', 'Bữa trưa': 'Cơm, tôm rim, canh mồng tơi', 'Bữa xế': 'Trái cây theo mùa' },
+};
+const SEED_EVALUATIONS = [
+  { hocSinhId: 's1', ngay: '2026-09-09', anUong: 'Tốt' },
+  { hocSinhId: 's2', ngay: '2026-09-09', anUong: 'Tốt' },
+  { hocSinhId: 's3', ngay: '2026-09-09', anUong: 'Cần cải thiện' },
+];
+const SEED_PARENT_EVALUATIONS = [
+  { phuHuynh: 'Trần Văn Cường', hocSinh: 'Trần Bảo Châu', lop: '2A', ngay: '2026-09-09', rating: 5, noiDung: 'Bé rất thích món canh bí đỏ và thịt kho trưa nay. Đánh giá cao vệ sinh khay ăn.' },
+  { phuHuynh: 'Lê Thị Dung', hocSinh: 'Lê Gia Hân', lop: 'Lá 1', ngay: '2026-09-09', rating: 5, noiDung: 'Thực đơn phong phú, bé ăn hết suất và được cô giáo chăm sóc chu đáo.' },
+  { phuHuynh: 'Nguyễn Văn Bình', hocSinh: 'Nguyễn Minh An', lop: '1A', ngay: '2026-09-09', rating: 4, noiDung: 'Món ăn ngon và đủ chất. Mong nhà trường tiếp tục duy trì hoa quả tươi cho bữa xế.' },
+];
+const MEAL_PRICE = 35000;
+
+const NAV_LABELS = {
+  'tong-quan': 'Tổng quan',
+  'nguoi-phu-trach': 'Người phụ trách',
+  'cong-ty-suat-an': 'Công ty cung cấp suất ăn',
+  'thuc-don': 'Thực đơn',
+  'hoc-sinh': 'Học sinh',
+  'danh-gia-hoc-sinh': 'Đánh giá học sinh',
+  'bieu-mau-3-buoc': 'Biểu mẫu 3 bước',
+  'bao-cao': 'Báo cáo thống kê',
+  'van-ban-lien-quan': 'Văn bản liên quan',
+  'cai-dat': 'Cài đặt',
+};
+const STUB_MAP = {
+  'danh-gia-hoc-sinh': 'Nhập điểm danh và đánh giá nề nếp ăn uống hằng ngày sẽ hiển thị ở đây.',
+  'bieu-mau-3-buoc': 'Quy trình kiểm thực 3 bước theo quy định an toàn thực phẩm.',
+  'bao-cao': 'Báo cáo tổng hợp, điểm danh và theo lớp sẽ hiển thị ở đây.',
+  'van-ban-lien-quan': 'Văn bản, quy định và mẫu hợp đồng liên quan đến bán trú.',
+  'cai-dat': 'Cấu hình tài khoản và phân quyền hệ thống.',
+};
+
+class Component extends DCLogic {
+  state = {
+    view: 'tong-quan',
+    selectedDate: '2026-09-09',
+    searchTerm: '',
+    ratingsTab: 'hoc-sinh',
+    schoolYear: '2026 - 2027',
+  };
+
+  setView = (id) => this.setState({ view: id });
+  setDate = (e) => this.setState({ selectedDate: e.target.value });
+  setSearch = (e) => this.setState({ searchTerm: e.target.value });
+  setYear = (e) => this.setState({ schoolYear: e.target.value });
+  goToStudents = () => this.setState({ view: 'hoc-sinh' });
+  goToMenu = () => this.setState({ view: 'thuc-don' });
+
+  navStyle(active) {
+    return active
+      ? 'text-align:left;border:none;border-radius:9px;padding:9px 12px;font-size:13.5px;font-weight:600;background:#eef4f2;color:#12433f;cursor:pointer;font-family:inherit'
+      : 'text-align:left;border:none;border-radius:9px;padding:9px 12px;font-size:13.5px;font-weight:500;background:transparent;color:#57605a;cursor:pointer;font-family:inherit';
+  }
+
+  tabStyle(active) {
+    return active
+      ? 'border:none;background:none;padding:0 0 10px;font-size:13px;font-weight:600;color:#1c1d1b;border-bottom:2px solid #12433f;cursor:pointer;font-family:inherit'
+      : 'border:none;background:none;padding:0 0 10px;font-size:13px;font-weight:500;color:#8a8d86;border-bottom:2px solid transparent;cursor:pointer;font-family:inherit';
+  }
+
+  statusStyle(status) {
+    if (status === 'Bán trú') return 'background:#eef4f2;color:#12433f';
+    return 'background:#f2f3ee;color:#6b6f68';
+  }
+
+  renderVals() {
+    const { view, selectedDate, searchTerm, ratingsTab, schoolYear } = this.state;
+
+    const homeItem = { label: 'Tổng quan', style: this.navStyle(view === 'tong-quan'), onClick: () => this.setView('tong-quan') };
+    const mainIds = ['nguoi-phu-trach', 'cong-ty-suat-an', 'thuc-don', 'hoc-sinh', 'danh-gia-hoc-sinh'];
+    const shortcutIds = ['bieu-mau-3-buoc', 'bao-cao', 'van-ban-lien-quan', 'cai-dat'];
+    const mainNavItems = mainIds.map((id) => ({ id, label: NAV_LABELS[id], style: this.navStyle(view === id), onClick: () => this.setView(id) }));
+    const shortcutNavItems = shortcutIds.map((id) => ({ id, label: NAV_LABELS[id], style: this.navStyle(view === id), onClick: () => this.setView(id) }));
+
+    const totalStudents = SEED_STUDENTS.length;
+    const boarding = SEED_STUDENTS.filter((s) => s.trangThai === 'Bán trú').length;
+    const nonBoarding = SEED_STUDENTS.filter((s) => s.trangThai === 'Không bán trú').length;
+    const sleepOnly = SEED_STUDENTS.filter((s) => s.trangThai === 'Chỉ ngủ bán trú').length;
+    const rate = totalStudents > 0 ? ((boarding / totalStudents) * 100).toFixed(1) : '0';
+    const boardingRate = totalStudents > 0 ? ((boarding / totalStudents) * 100).toFixed(0) : '0';
+    const nonBoardingRate = totalStudents > 0 ? ((nonBoarding / totalStudents) * 100).toFixed(0) : '0';
+    const sleepOnlyRate = totalStudents > 0 ? ((sleepOnly / totalStudents) * 100).toFixed(0) : '0';
+
+    const kpiCards = [
+      { label: 'Tổng số học sinh', value: String(totalStudents), unit: 'học sinh', hasProgress: false },
+      { label: 'Học sinh bán trú', value: String(boarding), unit: 'học sinh', hasProgress: false },
+      { label: 'Tỷ lệ bán trú', value: `${rate}%`, unit: '', hasProgress: true, progressStyle: `width:${rate}%` },
+      { label: 'Tiền ăn / học sinh / ngày', value: `${MEAL_PRICE.toLocaleString('vi-VN')} đ`, unit: '', hasProgress: false },
+    ];
+    const attendanceCards = [
+      { label: 'Bán trú', count: boarding, rate: boardingRate },
+      { label: 'Không bán trú', count: nonBoarding, rate: nonBoardingRate },
+      { label: 'Chỉ ngủ bán trú', count: sleepOnly, rate: sleepOnlyRate },
+    ];
+
+    const dayName = getDayOfWeekName(selectedDate);
+    const dayMenu = SEED_MENU[dayName];
+    const hasTodayMenu = Boolean(dayMenu);
+    const todayMeals = hasTodayMenu
+      ? Object.entries(dayMenu).map(([name, content]) => ({ name, dishes: content.split(',').map((d) => d.trim()).filter(Boolean) }))
+      : [];
+
+    const dayEvaluations = SEED_EVALUATIONS.filter((e) => e.ngay === selectedDate);
+    const evalTotal = dayEvaluations.length;
+    const positiveCount = dayEvaluations.filter((e) => e.anUong === 'Tốt' || e.anUong === 'Khá').length;
+    const negativeCount = dayEvaluations.filter((e) => e.anUong === 'Cần cải thiện').length;
+    const positiveRate = evalTotal > 0 ? ((positiveCount / evalTotal) * 100).toFixed(0) : '0';
+    const negativeRate = evalTotal > 0 ? ((negativeCount / evalTotal) * 100).toFixed(0) : '0';
+    const dishNames = todayMeals.length > 0 ? todayMeals.flatMap((m) => m.dishes).slice(0, 4) : [];
+    const dishRatings = dishNames.map((name, idx) => {
+      const base = Number(positiveRate) || 70;
+      const variance = [3, -4, 5, -2][idx % 4];
+      const score = Math.min(100, Math.max(50, base + variance));
+      return { name, score, style: `width:${score}%` };
+    });
+    const studentRatings = {
+      hasData: evalTotal > 0,
+      noData: evalTotal === 0,
+      total: evalTotal, positiveCount, positiveRate, negativeCount, negativeRate, dishRatings,
+    };
+
+    const parentTotal = SEED_PARENT_EVALUATIONS.length;
+    const avgRatingNum = parentTotal > 0 ? SEED_PARENT_EVALUATIONS.reduce((sum, e) => sum + e.rating, 0) / parentTotal : 0;
+    const avg = avgRatingNum.toFixed(1);
+    const stars = '★'.repeat(Math.round(avgRatingNum)) + '☆'.repeat(5 - Math.round(avgRatingNum));
+    const parentRatings = {
+      avg, stars, total: parentTotal,
+      list: SEED_PARENT_EVALUATIONS.map((e) => ({ ...e, ratingStars: '★'.repeat(e.rating) + '☆'.repeat(5 - e.rating) })),
+    };
+
+    const filteredStudents = SEED_STUDENTS.filter((s) => {
+      const term = searchTerm.trim().toLowerCase();
+      if (!term) return true;
+      return [s.hoTen, s.lop, s.sdt, s.phuHuynh].some((v) => v.toLowerCase().includes(term));
+    }).map((s) => ({ ...s, statusStyle: this.statusStyle(s.trangThai) }));
+
+    const studentStatCards = [
+      { label: 'Tổng học sinh', value: String(totalStudents) },
+      { label: 'Số lớp', value: String(SEED_CLASSES.length) },
+      { label: 'Đã điểm danh', value: `${evalTotal} / ${totalStudents}` },
+      { label: 'Năm học', value: schoolYear },
+    ];
+
+    const menuRows = DAYS_OF_WEEK.map((day) => ({
+      day,
+      cells: MEAL_COLUMNS.map((meal) => (SEED_MENU[day] && SEED_MENU[day][meal]) || '—'),
+    }));
+
+    const managerFields = [
+      { label: 'Họ tên', value: SEED_MANAGER.hoTen },
+      { label: 'Chức vụ', value: SEED_MANAGER.chucVu },
+      { label: 'Số điện thoại', value: SEED_MANAGER.sdt },
+      { label: 'Email', value: SEED_MANAGER.email },
+      { label: 'Ghi chú', value: SEED_MANAGER.ghiChu },
+    ];
+
+    const companies = SEED_COMPANIES.map((c) => ({
+      ...c,
+      statusStyle: c.trangThai === 'Đang hợp tác' ? 'background:#eef4f2;color:#12433f' : 'background:#f2f3ee;color:#6b6f68',
+    }));
+
+    const isStub = !['tong-quan', 'hoc-sinh', 'thuc-don', 'nguoi-phu-trach', 'cong-ty-suat-an'].includes(view);
+
+    return {
+      homeItem, mainNavItems, shortcutNavItems,
+      viewIsOverview: view === 'tong-quan',
+      viewIsStudents: view === 'hoc-sinh',
+      viewIsMenu: view === 'thuc-don',
+      viewIsManager: view === 'nguoi-phu-trach',
+      viewIsCompanies: view === 'cong-ty-suat-an',
+      viewIsStub: isStub,
+      stubInfo: { title: NAV_LABELS[view] || '', description: STUB_MAP[view] || '' },
+      selectedDate, setDate: this.setDate, goToStudents: this.goToStudents, goToMenu: this.goToMenu,
+      todayFormatted: formatDateVN(selectedDate), dayLabel: dayName,
+      kpiCards, attendanceCards,
+      hasTodayMenu, hasTodayMenuFalse: !hasTodayMenu, todayMeals,
+      tabStudentStyle: this.tabStyle(ratingsTab === 'hoc-sinh'),
+      tabParentStyle: this.tabStyle(ratingsTab === 'phu-huynh'),
+      setRatingsTabStudent: () => this.setState({ ratingsTab: 'hoc-sinh' }),
+      setRatingsTabParent: () => this.setState({ ratingsTab: 'phu-huynh' }),
+      ratingsTabIsStudent: ratingsTab === 'hoc-sinh',
+      ratingsTabIsParent: ratingsTab === 'phu-huynh',
+      studentRatings, parentRatings,
+      schoolYear, setYear: this.setYear, schoolYears: SCHOOL_YEARS,
+      searchTerm, setSearch: this.setSearch, filteredStudents, studentStatCards,
+      mealColumns: MEAL_COLUMNS, menuRows,
+      managerFields, companies,
+    };
+  }
+}
+
+</script>
+</body>
+</html>
