@@ -1,6 +1,23 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { ZoomIn } from 'lucide-react'
 import { formatDateVN, getDayOfWeekName } from '../../utils/dateUtils'
 import DashboardEmptyState from './DashboardEmptyState'
+import Modal from '../ui/Modal'
+import Button from '../ui/Button'
+
+const MEAL_IMAGES = {
+  'bữa sáng': '/menu/bua-sang.png',
+  'bữa trưa': '/menu/bua-trua.png',
+  'bữa xế': '/menu/bua-xe.png',
+  'bữa chiều': '/menu/bua-xe.png',
+}
+
+function getMealImage(mealType) {
+  if (!mealType) return null
+  const key = mealType.toLowerCase().trim()
+  return MEAL_IMAGES[key] || null
+}
 
 export default function TodayMenu({
   date,
@@ -10,6 +27,7 @@ export default function TodayMenu({
   onRetry,
 }) {
   const navigate = useNavigate()
+  const [zoomedImage, setZoomedImage] = useState(null)
   const formattedDate = formatDateVN(date)
   const dayName = getDayOfWeekName(date)
   const dayMenu = menu ? menu[dayName] : null
@@ -78,36 +96,64 @@ export default function TodayMenu({
                       .map((d) => d.trim())
                       .filter(Boolean)
                   : []
+                const mealImg = getMealImage(mealType)
 
                 return (
                   <div
                     key={mealType}
-                    className="rounded-xl border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-50"
+                    className="flex items-start gap-3 rounded-xl border border-slate-100 bg-slate-50/50 p-3 transition-colors hover:bg-slate-50"
                   >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="inline-block rounded-md border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
-                          {mealType}
-                        </span>
-                        <span className="text-xs font-medium text-slate-400">
-                          {dishList.length} món
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="mt-2 flex flex-wrap gap-1.5">
-                      {dishList.length > 0 ? (
-                        dishList.map((dish, idx) => (
-                          <span
-                            key={idx}
-                            className="inline-flex items-center rounded-lg bg-white px-2.5 py-1 text-xs font-medium text-slate-800 shadow-2xs border border-slate-200/70"
-                          >
-                            {dish}
+                    {mealImg && (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setZoomedImage({
+                            src: mealImg,
+                            title: `${mealType} (${dayName || 'Hôm nay'} - ${formattedDate})`,
+                          })
+                        }
+                        className="group relative shrink-0 cursor-pointer overflow-hidden rounded-lg border border-slate-200/80 shadow-2xs transition-transform hover:scale-102 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                        title="Bấm để phóng to ảnh"
+                      >
+                        <img
+                          src={mealImg}
+                          alt={mealType}
+                          className="h-16 w-16 sm:h-20 sm:w-20 rounded-lg object-cover transition-transform duration-200 group-hover:scale-105"
+                          onError={(e) => {
+                            e.currentTarget.parentElement.style.display = 'none'
+                          }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-slate-900/40 opacity-0 transition-opacity group-hover:opacity-100">
+                          <ZoomIn size={18} className="text-white drop-shadow-sm" />
+                        </div>
+                      </button>
+                    )}
+                    <div className="min-w-0 flex-1">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <span className="inline-block rounded-md border border-slate-200 bg-white px-2.5 py-0.5 text-xs font-semibold text-slate-700">
+                            {mealType}
                           </span>
-                        ))
-                      ) : (
-                        <span className="text-xs italic text-slate-400">Chưa xếp món</span>
-                      )}
+                          <span className="text-xs font-medium text-slate-400">
+                            {dishList.length} món
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-2 flex flex-wrap gap-1.5">
+                        {dishList.length > 0 ? (
+                          dishList.map((dish, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center rounded-lg bg-white px-2.5 py-1 text-xs font-medium text-slate-800 shadow-2xs border border-slate-200/70"
+                            >
+                              {dish}
+                            </span>
+                          ))
+                        ) : (
+                          <span className="text-xs italic text-slate-400">Chưa xếp món</span>
+                        )}
+                      </div>
                     </div>
                   </div>
                 )
@@ -133,6 +179,29 @@ export default function TodayMenu({
           </Link>
         </div>
       )}
+
+      {/* Modal phóng to ảnh món ăn */}
+      <Modal
+        open={Boolean(zoomedImage)}
+        onClose={() => setZoomedImage(null)}
+        title={zoomedImage?.title || 'Ảnh món ăn'}
+        width="max-w-2xl"
+        footer={
+          <Button variant="secondary" onClick={() => setZoomedImage(null)}>
+            Đóng
+          </Button>
+        }
+      >
+        {zoomedImage && (
+          <div className="flex flex-col items-center justify-center overflow-hidden rounded-xl bg-slate-50 p-2">
+            <img
+              src={zoomedImage.src}
+              alt={zoomedImage.title}
+              className="max-h-[65vh] w-auto max-w-full rounded-lg object-contain shadow-xs"
+            />
+          </div>
+        )}
+      </Modal>
     </div>
   )
 }
