@@ -93,10 +93,12 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
       {/* Brand Header matching template + Hamburger button căn góc trái */}
       <div
         style={{
-          padding: '22px 18px 18px',
+          height: '58px',
+          padding: '0 18px',
           display: 'flex',
           alignItems: 'center',
           gap: '10px',
+          borderBottom: '1px solid #eceeea',
         }}
       >
         {/* Hamburger button căn góc trái */}
@@ -467,12 +469,10 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
           flexShrink: 0,
           background: '#ffffff',
           borderRight: '1px solid #e6e7e2',
-          display: 'flex',
-          flexDirection: 'column',
           overflowY: 'auto',
           transition: 'width 0.2s ease-in-out',
         }}
-        className="hidden lg:flex"
+        className="hidden flex-col lg:flex"
       >
         {collapsed ? renderCollapsedContent() : renderFullContent(false)}
       </aside>
