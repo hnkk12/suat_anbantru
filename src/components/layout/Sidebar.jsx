@@ -1,13 +1,9 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useCallback } from 'react'
 import { NavLink, Link, useLocation } from 'react-router-dom'
 import {
   ShieldCheck,
   Settings,
   LogOut,
-  Bell,
-  QrCode,
-  CheckCircle2,
-  AlertCircle,
   X,
   Menu,
   LayoutDashboard,
@@ -35,52 +31,31 @@ const SHORTCUT_NAV_ITEMS = [
   { name: 'Biểu mẫu 3 bước', to: '/bieu-mau-3-buoc', icon: ClipboardCheck },
   { name: 'Báo cáo thống kê', to: '/bao-cao', icon: BarChart3 },
   { name: 'Văn bản liên quan', to: '/van-ban-lien-quan', icon: FileText },
-  { name: 'Cài đặt', to: '/cai-dat', icon: Settings },
 ]
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose }) {
   const location = useLocation()
   const [collapsed, setCollapsed] = useState(false)
-  const [mobileOpen, setMobileOpen] = useState(false)
+  const [internalMobileOpen, setInternalMobileOpen] = useState(false)
   const [accountOpen, setAccountOpen] = useState(false)
-  const [notificationOpen, setNotificationOpen] = useState(false)
-  const [qrOpen, setQrOpen] = useState(false)
   const accountRef = useRef(null)
 
-  const [notifications, setNotifications] = useState([
-    {
-      id: 1,
-      title: 'Lớp 1A đã xác nhận suất ăn',
-      desc: '32/32 học sinh đăng ký ăn trưa hôm nay.',
-      time: '10 phút trước',
-      unread: true,
-    },
-    {
-      id: 2,
-      title: 'Nhà bếp gửi thực đơn tuần sau',
-      desc: 'Công ty An Lành đã gửi thực đơn tuần 37.',
-      time: '1 giờ trước',
-      unread: true,
-    },
-    {
-      id: 3,
-      title: 'Kiểm tra nhiệt độ lưu mẫu đạt chuẩn',
-      desc: 'Mẫu thức ăn ca trưa 09/09 đã được niêm phong.',
-      time: '3 giờ trước',
-      unread: false,
-    },
-  ])
-
-  const unreadCount = notifications.filter((n) => n.unread).length
+  const isControlled = externalMobileOpen !== undefined
+  const mobileOpen = isControlled ? externalMobileOpen : internalMobileOpen
+  const closeMobile = useCallback(() => {
+    if (isControlled) {
+      onMobileClose?.()
+    } else {
+      setInternalMobileOpen(false)
+    }
+  }, [isControlled, onMobileClose])
 
   // Close menus on Escape or click outside
   useEffect(() => {
     const closeMenu = (event) => {
       if (event.key === 'Escape') {
         setAccountOpen(false)
-        setNotificationOpen(false)
-        setQrOpen(false)
-        setMobileOpen(false)
+        closeMobile()
       }
       if (
         event.type === 'mousedown' &&
@@ -96,11 +71,7 @@ export default function Sidebar() {
       document.removeEventListener('keydown', closeMenu)
       document.removeEventListener('mousedown', closeMenu)
     }
-  }, [])
-
-  function markAllRead() {
-    setNotifications((prev) => prev.map((n) => ({ ...n, unread: false })))
-  }
+  }, [closeMobile])
 
   const linkClass = (isActive) =>
     `text-left border-none rounded-[9px] px-3 py-2 text-[13.5px] font-sans font-medium transition-colors ${
@@ -133,7 +104,7 @@ export default function Sidebar() {
           type="button"
           onClick={() => {
             if (isMobile) {
-              setMobileOpen(false)
+              closeMobile()
             } else {
               setCollapsed(true)
             }
@@ -188,7 +159,7 @@ export default function Sidebar() {
         <NavLink
           to={HOME_ITEM.to}
           end
-          onClick={() => isMobile && setMobileOpen(false)}
+          onClick={() => isMobile && closeMobile()}
           className={({ isActive }) =>
             linkClass(isActive || location.pathname === '/')
           }
@@ -218,7 +189,7 @@ export default function Sidebar() {
             <NavLink
               key={item.to}
               to={item.to}
-              onClick={() => isMobile && setMobileOpen(false)}
+              onClick={() => isMobile && closeMobile()}
               className={({ isActive }) => linkClass(isActive)}
             >
               {item.name}
@@ -248,7 +219,7 @@ export default function Sidebar() {
             <NavLink
               key={item.to}
               to={item.to}
-              onClick={() => isMobile && setMobileOpen(false)}
+              onClick={() => isMobile && closeMobile()}
               className={({ isActive }) => linkClass(isActive)}
             >
               {item.name}
@@ -257,7 +228,7 @@ export default function Sidebar() {
         </nav>
       </div>
 
-      {/* Bottom User Footer matching template */}
+      {/* Bottom User Footer */}
       <div
         ref={accountRef}
         style={{
@@ -270,44 +241,11 @@ export default function Sidebar() {
         {/* Admin Popover Menu */}
         {accountOpen && (
           <div className="absolute bottom-full left-3 right-3 mb-2 min-w-[224px] rounded-[14px] border border-[#e3e4df] bg-white p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 z-50">
-            <button
-              type="button"
-              onClick={() => {
-                setAccountOpen(false)
-                setNotificationOpen(true)
-              }}
-              className="flex w-full items-center justify-between rounded-[9px] px-3 py-2 text-left text-[13px] font-medium text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
-            >
-              <span className="flex items-center gap-2.5">
-                <Bell size={16} />
-                Thông báo
-              </span>
-              {unreadCount > 0 && (
-                <span className="rounded-[6px] bg-[#e07a5f] px-1.5 py-0.5 text-[10px] font-bold text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setAccountOpen(false)
-                setQrOpen(true)
-              }}
-              className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[13px] font-medium text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
-            >
-              <QrCode size={16} />
-              Quét mã QR điểm danh
-            </button>
-
-            <div className="my-1 border-t border-[#eceeea]" />
-
             <Link
               to="/phan-quyen-menu"
               onClick={() => {
                 setAccountOpen(false)
-                if (isMobile) setMobileOpen(false)
+                if (isMobile) closeMobile()
               }}
               className="flex items-center gap-2.5 rounded-[9px] px-3 py-2 text-[13px] font-medium text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
             >
@@ -319,7 +257,7 @@ export default function Sidebar() {
               to="/cai-dat"
               onClick={() => {
                 setAccountOpen(false)
-                if (isMobile) setMobileOpen(false)
+                if (isMobile) closeMobile()
               }}
               className="flex items-center gap-2.5 rounded-[9px] px-3 py-2 text-[13px] font-medium text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
             >
@@ -335,7 +273,7 @@ export default function Sidebar() {
                 setAccountOpen(false)
                 alert('Đã đăng xuất phiên làm việc.')
               }}
-              className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[13px] font-medium text-rose-600 hover:bg-rose-50"
+              className="flex w-full items-center gap-2.5 rounded-[9px] px-3 py-2 text-left text-[13px] font-medium text-rose-600 hover:bg-rose-50 cursor-pointer"
             >
               <LogOut size={16} />
               Đăng xuất
@@ -456,39 +394,19 @@ export default function Sidebar() {
       {/* Bottom User Avatar in mini mode */}
       <div ref={accountRef} className="relative mt-auto pt-3">
         {accountOpen && (
-          <div className="absolute bottom-full left-2 mb-2 min-w-[200px] rounded-[14px] border border-[#e3e4df] bg-white p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 z-50">
+          <div className="absolute bottom-full left-2 mb-2 min-w-[180px] rounded-[14px] border border-[#e3e4df] bg-white p-1.5 shadow-xl animate-in fade-in-50 zoom-in-95 duration-100 z-50">
             <div className="border-b border-[#eceeea] px-3 py-2">
               <p className="text-[13px] font-semibold text-[#1c1d1b]">Admin</p>
               <p className="text-[11px] text-[#8a8d86]">Quản trị viên</p>
             </div>
             <div className="py-1">
-              <button
-                type="button"
-                onClick={() => {
-                  setAccountOpen(false)
-                  setNotificationOpen(true)
-                }}
-                className="flex w-full items-center justify-between rounded-[8px] px-3 py-2 text-left text-[12.5px] text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
+              <Link
+                to="/phan-quyen-menu"
+                onClick={() => setAccountOpen(false)}
+                className="flex items-center gap-2 rounded-[8px] px-3 py-2 text-[12.5px] text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
               >
-                <span className="flex items-center gap-2">
-                  <Bell size={15} /> Thông báo
-                </span>
-                {unreadCount > 0 && (
-                  <span className="rounded-full bg-[#e07a5f] px-1.5 py-0.2 text-[10px] font-bold text-white">
-                    {unreadCount}
-                  </span>
-                )}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAccountOpen(false)
-                  setQrOpen(true)
-                }}
-                className="flex w-full items-center gap-2 rounded-[8px] px-3 py-2 text-left text-[12.5px] text-[#57605a] hover:bg-[#fdf2ee] hover:text-[#c84b26]"
-              >
-                <QrCode size={15} /> QR điểm danh
-              </button>
+                <ShieldCheck size={15} /> Phân quyền menu
+              </Link>
               <Link
                 to="/cai-dat"
                 onClick={() => setAccountOpen(false)}
@@ -496,6 +414,17 @@ export default function Sidebar() {
               >
                 <Settings size={15} /> Cài đặt
               </Link>
+              <div className="my-1 border-t border-[#eceeea]" />
+              <button
+                type="button"
+                onClick={() => {
+                  setAccountOpen(false)
+                  alert('Đã đăng xuất phiên làm việc.')
+                }}
+                className="flex w-full items-center gap-2 rounded-[8px] px-3 py-2 text-left text-[12.5px] text-rose-600 hover:bg-rose-50 cursor-pointer"
+              >
+                <LogOut size={15} /> Đăng xuất
+              </button>
             </div>
           </div>
         )}
@@ -514,24 +443,11 @@ export default function Sidebar() {
 
   return (
     <>
-      {/* Mobile Floating Button (only visible when sidebar is closed on mobile) */}
-      {!mobileOpen && (
-        <button
-          type="button"
-          onClick={() => setMobileOpen(true)}
-          aria-label="Mở menu điều hướng"
-          title="Mở menu"
-          className="fixed top-3 left-3 z-40 flex h-9 w-9 items-center justify-center rounded-[8px] border border-[#e3e4df] bg-white text-[#57605a] shadow-xs hover:bg-[#f2f3ee] hover:text-[#c84b26] lg:hidden cursor-pointer"
-        >
-          <Menu size={18} />
-        </button>
-      )}
-
       {/* Mobile Backdrop */}
       {mobileOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/40 backdrop-blur-xs lg:hidden animate-in fade-in-50"
-          onClick={() => setMobileOpen(false)}
+          onClick={closeMobile}
         />
       )}
 
@@ -560,99 +476,6 @@ export default function Sidebar() {
       >
         {collapsed ? renderCollapsedContent() : renderFullContent(false)}
       </aside>
-
-      {/* Notification Center Modal */}
-      {notificationOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-md overflow-hidden rounded-[16px] border border-[#e3e4df] bg-white shadow-xl">
-            <div className="flex items-center justify-between border-b border-[#eceeea] px-5 py-3.5">
-              <div className="flex items-center gap-2">
-                <h3 className="text-[14px] font-semibold text-[#1c1d1b]">Thông báo hệ thống</h3>
-                {unreadCount > 0 && (
-                  <span className="rounded-[6px] bg-[#fdf2ee] px-2 py-0.5 text-[11px] font-semibold text-[#c84b26]">
-                    {unreadCount} chưa đọc
-                  </span>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                {unreadCount > 0 && (
-                  <button
-                    type="button"
-                    onClick={markAllRead}
-                    className="text-[12px] font-medium text-[#c84b26] hover:underline cursor-pointer"
-                  >
-                    Đánh dấu đã đọc
-                  </button>
-                )}
-                <button
-                  type="button"
-                  onClick={() => setNotificationOpen(false)}
-                  className="rounded-lg p-1 text-[#8a8d86] hover:bg-[#f2f3ee]"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            </div>
-
-            <div className="max-h-[380px] divide-y divide-[#eceeea] overflow-y-auto p-2">
-              {notifications.map((item) => (
-                <div
-                  key={item.id}
-                  className={`flex gap-3 rounded-[10px] p-3 transition-colors hover:bg-[#fafaf8] ${
-                    item.unread ? 'bg-[#fdf2ee]/40' : ''
-                  }`}
-                >
-                  <div className="mt-0.5 shrink-0">
-                    {item.unread ? (
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#fdf2ee] text-[#c84b26]">
-                        <CheckCircle2 size={15} />
-                      </div>
-                    ) : (
-                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#f2f3ee] text-[#8a8d86]">
-                        <AlertCircle size={15} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="flex-1 text-[12.5px]">
-                    <p className="font-semibold text-[#1c1d1b]">{item.title}</p>
-                    <p className="mt-0.5 text-[#6b6f68] leading-relaxed">{item.desc}</p>
-                    <p className="mt-1 text-[11px] text-[#9a9d96]">{item.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* QR Attendance Code Modal */}
-      {qrOpen && (
-        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/40 p-4 backdrop-blur-xs">
-          <div className="w-full max-w-sm rounded-[16px] border border-[#e3e4df] bg-white p-5 text-center shadow-xl">
-            <div className="flex items-center justify-between pb-3 border-b border-[#eceeea]">
-              <span className="text-[14px] font-semibold text-[#1c1d1b]">Mã QR điểm danh</span>
-              <button
-                type="button"
-                onClick={() => setQrOpen(false)}
-                className="rounded-lg p-1 text-[#8a8d86] hover:bg-[#f2f3ee]"
-              >
-                <X size={16} />
-              </button>
-            </div>
-            <div className="mx-auto mt-4 flex h-44 w-44 items-center justify-center rounded-[12px] border border-[#e3e4df] bg-[#fafaf8] p-3">
-              <div className="flex flex-col items-center gap-2">
-                <QrCode size={40} className="text-[#c84b26]" />
-                <span className="text-[12px] font-medium text-[#57605a]">
-                  Mã QR điểm danh trực tuyến
-                </span>
-              </div>
-            </div>
-            <p className="mt-3.5 text-[12.5px] leading-relaxed text-[#6b6f68]">
-              Quét mã trên điện thoại giáo viên để mở nhanh bảng điểm danh theo lớp.
-            </p>
-          </div>
-        </div>
-      )}
     </>
   )
 }
