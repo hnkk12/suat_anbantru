@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { AlertCircle, RefreshCw } from 'lucide-react'
-import { formatDateVN } from '../../utils/dateUtils'
+import { formatDateVN, getDayOfWeekName } from '../../utils/dateUtils'
 
 export default function AttendanceSummary({
   date,
@@ -9,88 +8,54 @@ export default function AttendanceSummary({
   nonBoarding = 0,
   sleepOnly = 0,
   loading = false,
-  error = false,
-  onRetry,
 }) {
   const navigate = useNavigate()
-  const formattedDate = formatDateVN(date)
+  const todayFormatted = formatDateVN(date)
+  const dayLabel = getDayOfWeekName(date)
 
-  if (error) {
-    return (
-      <div className="rounded-xl border border-rose-200 bg-rose-50/50 p-5 text-center text-xs text-rose-700">
-        <div className="flex items-center justify-center gap-2">
-          <AlertCircle size={16} />
-          <span>Không thể tải thống kê điểm danh bán trú.</span>
-        </div>
-        {onRetry && (
-          <button
-            type="button"
-            onClick={onRetry}
-            className="mt-2 inline-flex items-center gap-1 font-semibold underline hover:text-rose-800"
-          >
-            <RefreshCw size={12} /> Thử lại
-          </button>
-        )}
-      </div>
-    )
-  }
-
-  const boardingRate = total > 0 ? ((boarding / total) * 100).toFixed(1) : 0
-  const nonBoardingRate = total > 0 ? ((nonBoarding / total) * 100).toFixed(1) : 0
-  const sleepOnlyRate = total > 0 ? ((sleepOnly / total) * 100).toFixed(1) : 0
+  const boardingRate = total > 0 ? ((boarding / total) * 100).toFixed(0) : '0'
+  const nonBoardingRate = total > 0 ? ((nonBoarding / total) * 100).toFixed(0) : '0'
+  const sleepOnlyRate = total > 0 ? ((sleepOnly / total) * 100).toFixed(0) : '0'
 
   const cards = [
-    { id: 'ban-tru', title: 'Bán trú', count: boarding, rate: `${boardingRate}%`, rateClass: 'bg-emerald-100 text-emerald-700' },
-    { id: 'khong-ban-tru', title: 'Không bán trú', count: nonBoarding, rate: `${nonBoardingRate}%`, rateClass: 'bg-rose-100 text-rose-700' },
-    { id: 'chi-ngu', title: 'Chỉ ngủ bán trú', count: sleepOnly, rate: `${sleepOnlyRate}%`, rateClass: 'bg-violet-100 text-violet-700' },
+    { label: 'Bán trú', count: boarding, rate: boardingRate },
+    { label: 'Không bán trú', count: nonBoarding, rate: nonBoardingRate },
+    { label: 'Chỉ ngủ bán trú', count: sleepOnly, rate: sleepOnlyRate },
   ]
 
-  const handleCardClick = (_card) => {
-    navigate('/hoc-sinh')
-  }
-
   return (
-    <div className="space-y-3">
+    <div className="flex flex-col gap-2.5">
       <div>
-        <h2 className="text-lg font-semibold tracking-tight text-[#20211f]">
-          Thống kê điểm danh bán trú
+        <h2 className="text-[16px] font-semibold tracking-[-0.01em] text-[#1c1d1b]">
+          Điểm danh bán trú
         </h2>
-        <p className="text-xs text-slate-500">
-          {formattedDate} · Nhấn vào thẻ để xem chi tiết
+        <p className="mt-0.5 text-[12.5px] text-[#9a9d96]">
+          {todayFormatted} · {dayLabel}
         </p>
       </div>
 
-      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-        {cards.map((item) => (
+      <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-3">
+        {cards.map((card) => (
           <div
-            key={item.id}
-            onClick={() => handleCardClick(item)}
+            key={card.label}
+            onClick={() => navigate('/hoc-sinh')}
             role="button"
             tabIndex={0}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') handleCardClick(item)
-            }}
-            className="group flex min-h-28 cursor-pointer items-center justify-between rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-xs transition-all hover:-translate-y-0.5 hover:border-[#bfc1bc] hover:shadow-sm"
+            onKeyDown={(e) => e.key === 'Enter' && navigate('/hoc-sinh')}
+            className="flex cursor-pointer items-center justify-between rounded-[16px] border border-[#e3e4df] bg-white p-5 shadow-xs transition-all hover:border-[#cfd1cb]"
           >
             <div>
-              <span className="text-xs font-medium text-gray-500">{item.title}</span>
-              {loading ? (
-                <div className="mt-1 h-5 w-16 animate-pulse rounded bg-gray-100" />
-              ) : (
-                <div className="flex items-baseline gap-2 mt-0.5">
-                  <span className="text-2xl font-semibold tracking-tight text-[#20211f]">
-                    {item.count}
-                  </span>
-                  <span className="text-xs font-medium text-gray-400">học sinh</span>
-                </div>
-              )}
+              <span className="text-[12.5px] font-medium text-[#6b6f68]">{card.label}</span>
+              <div className="mt-1.5 flex items-baseline gap-1.5">
+                <span className="text-[22px] font-semibold tracking-[-0.02em] text-[#1c1d1b]">
+                  {loading ? '—' : card.count}
+                </span>
+                <span className="text-[12px] font-medium text-[#9a9d96]">học sinh</span>
+              </div>
             </div>
-
-            <div>
-              <span className={`rounded-lg px-2.5 py-1 text-xs font-semibold ${item.rateClass}`}>
-                {loading ? '—' : item.rate}
-              </span>
-            </div>
+            <span className="rounded-[8px] bg-[#f2f3ee] px-2.5 py-1 text-[12.5px] font-semibold text-[#57605a]">
+              {loading ? '—' : `${card.rate}%`}
+            </span>
           </div>
         ))}
       </div>

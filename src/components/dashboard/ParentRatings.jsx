@@ -1,6 +1,6 @@
 import { useState, useMemo } from 'react'
-import DashboardEmptyState from './DashboardEmptyState'
 import { formatDateVN } from '../../utils/dateUtils'
+import { AlertCircle, RefreshCw } from 'lucide-react'
 
 const STAR_FILTERS = ['Tất cả', '5★', '4★', '3★', '2★', '1★']
 
@@ -26,14 +26,15 @@ export default function ParentRatings({
     return dateSpecificEvaluations.filter((e) => e.rating === starNum)
   }, [dateSpecificEvaluations, selectedStar])
 
-  // Tính điểm trung bình & phân bố
+  // Tính điểm trung bình
   const total = dateSpecificEvaluations.length
-  const avgRating =
+  const avgRatingNum =
     total > 0
-      ? (
-          dateSpecificEvaluations.reduce((sum, item) => sum + (item.rating || 5), 0) / total
-        ).toFixed(1)
-      : '0.0'
+      ? dateSpecificEvaluations.reduce((sum, item) => sum + (item.rating || 5), 0) / total
+      : 0
+  const avg = avgRatingNum.toFixed(1)
+  const stars =
+    '★'.repeat(Math.round(avgRatingNum)) + '☆'.repeat(5 - Math.round(avgRatingNum))
 
   // Xử lý xuất Excel / CSV
   const handleExportExcel = () => {
@@ -67,67 +68,69 @@ export default function ParentRatings({
 
   if (error) {
     return (
-      <DashboardEmptyState
-        isError
-        onRetry={onRetry}
-        title="Không thể tải đánh giá phụ huynh"
-        description="Đã xảy ra lỗi khi lấy phản hồi từ cổng phụ huynh."
-      />
+      <div className="mt-4 rounded-[12px] border border-rose-200 bg-rose-50/50 p-4 text-center text-[12.5px] text-rose-700">
+        <div className="flex items-center justify-center gap-2">
+          <AlertCircle size={16} />
+          <span>Không thể tải đánh giá phụ huynh.</span>
+        </div>
+        {onRetry && (
+          <button
+            type="button"
+            onClick={onRetry}
+            className="mt-2 inline-flex items-center gap-1 font-semibold underline hover:text-rose-800"
+          >
+            <RefreshCw size={12} /> Thử lại
+          </button>
+        )}
+      </div>
     )
   }
 
   if (loading) {
     return (
-      <div className="space-y-3 py-2">
-        <div className="h-16 animate-pulse rounded-xl bg-slate-100" />
-        <div className="h-32 animate-pulse rounded-xl bg-slate-100" />
+      <div className="mt-4 space-y-3">
+        <div className="h-16 animate-pulse rounded-[12px] bg-[#fafaf8]" />
+        <div className="h-28 animate-pulse rounded-[12px] bg-[#fafaf8]" />
       </div>
     )
   }
 
   if (dateSpecificEvaluations.length === 0) {
     return (
-      <DashboardEmptyState
-        title="Chưa có đánh giá phụ huynh"
-        description="Phụ huynh chưa gửi ý kiến đánh giá cho ngày này."
-      />
+      <div className="mt-4 rounded-[12px] border border-dashed border-[#dcdedb] p-7 text-center">
+        <p className="text-[12.5px] font-semibold text-[#3a3c38]">Chưa có đánh giá phụ huynh</p>
+        <p className="mt-1 text-[12px] text-[#9a9d96]">Phụ huynh chưa gửi ý kiến đánh giá cho ngày này.</p>
+      </div>
     )
   }
 
   return (
-    <div className="space-y-3.5">
-      {/* 1. Header điểm trung bình + Nút Xuất Excel */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-slate-100 bg-slate-50/60 p-3">
+    <div className="mt-4 flex flex-col gap-3">
+      {/* Average rating box + Export button */}
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[12px] border border-[#eceeea] bg-[#fafaf8] p-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-gray-200 bg-white text-gray-900">
-            <span className="text-xl font-bold">{avgRating}</span>
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-[10px] border border-[#e3e4df] bg-white text-[16px] font-bold text-[#1c1d1b]">
+            {avg}
           </div>
           <div>
-            <div className="flex items-center gap-1">
-              <span className="text-amber-500 font-bold text-sm tracking-wider">
-                {'★'.repeat(Math.round(Number(avgRating)))}
-                {'☆'.repeat(5 - Math.round(Number(avgRating)))}
-              </span>
-              <span className="ml-1 text-xs font-bold text-slate-900">{avgRating}/5.0</span>
-            </div>
-            <p className="mt-0.5 text-xs text-slate-500 font-medium">
-              Dựa trên <span className="font-semibold text-slate-700">{total}</span> lượt phản hồi phụ huynh
+            <span className="text-[13px] font-semibold text-[#c84b26]">{stars}</span>
+            <p className="mt-0.5 text-[12px] text-[#9a9d96]">
+              {total} phản hồi phụ huynh
             </p>
           </div>
         </div>
 
-        {/* Nút Xuất Excel */}
         <button
           type="button"
           onClick={handleExportExcel}
-          className="rounded-lg border border-slate-200 bg-white px-3.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs transition-colors hover:bg-slate-50 hover:text-teal-700"
+          className="rounded-[8px] border border-[#f5c6b8] bg-[#fdf2ee] px-3 py-1.5 text-[12px] font-semibold text-[#c84b26] shadow-xs hover:bg-[#fae4db] hover:border-[#c84b26] hover:text-[#962e10] transition-colors cursor-pointer"
         >
           Xuất Excel
         </button>
       </div>
 
-      {/* 2. Bộ lọc sao */}
-      <div className="flex flex-wrap items-center gap-1 border-b border-slate-100 pb-2">
+      {/* Star filters */}
+      <div className="flex flex-wrap items-center gap-1 border-b border-[#eceeea] pb-2">
         {STAR_FILTERS.map((star) => {
           const isActive = selectedStar === star
           return (
@@ -135,10 +138,10 @@ export default function ParentRatings({
               key={star}
               type="button"
               onClick={() => setSelectedStar(star)}
-              className={`rounded-lg px-2.5 py-1 text-xs font-medium transition-colors ${
+              className={`rounded-[7px] px-2.5 py-1 text-[12px] font-medium transition-colors ${
                 isActive
-                  ? 'bg-teal-600 font-semibold text-white shadow-2xs'
-                  : 'bg-slate-100/70 text-slate-600 hover:bg-slate-200/60'
+                  ? 'bg-[#c84b26] font-semibold text-white'
+                  : 'bg-[#f2f3ee] text-[#57605a] hover:bg-[#e8eae3]'
               }`}
             >
               {star}
@@ -147,35 +150,37 @@ export default function ParentRatings({
         })}
       </div>
 
-      {/* 3. Danh sách đánh giá phụ huynh */}
-      <div className="space-y-2.5 max-h-[260px] overflow-y-auto pr-1">
+      {/* Reviews list */}
+      <div className="flex max-h-[260px] flex-col gap-2 overflow-y-auto pr-1">
         {filtered.length > 0 ? (
-          filtered.map((item) => (
-            <div
-              key={item.id}
-              className="rounded-xl border border-slate-100 bg-white p-3 text-xs shadow-2xs transition-colors hover:border-slate-200"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <span className="font-bold text-slate-900">{item.phuHuynh}</span>
-                  <span className="text-slate-400 text-xs">
-                    {' '}• Phụ huynh bé {item.hocSinh} ({item.lop})
+          filtered.map((item) => {
+            const itemStars = '★'.repeat(item.rating || 5) + '☆'.repeat(5 - (item.rating || 5))
+            return (
+              <div
+                key={item.id || item.phuHuynh}
+                className="rounded-[12px] border border-[#eceeea] bg-white p-3 text-[12px]"
+              >
+                <div className="flex items-center justify-between">
+                  <span className="font-semibold text-[#1c1d1b]">
+                    {item.phuHuynh}{' '}
+                    <span className="font-normal text-[#9a9d96]">
+                      · bé {item.hocSinh} ({item.lop})
+                    </span>
                   </span>
+                  <span className="font-semibold text-[#c84b26]">{itemStars}</span>
                 </div>
-                <div className="text-amber-500 font-medium text-xs tracking-wider">
-                  {'★'.repeat(item.rating || 5)}
-                  {'☆'.repeat(5 - (item.rating || 5))}
-                </div>
+                <p className="mt-1.5 text-[12.5px] leading-relaxed text-[#57605a]">
+                  {item.noiDung}
+                </p>
+                <span className="mt-1 block text-[11px] text-[#9a9d96]">
+                  {formatDateVN(item.ngay || date)}
+                </span>
               </div>
-              <p className="mt-1.5 text-slate-600 leading-relaxed">{item.noiDung}</p>
-              <div className="mt-1.5 text-xs text-slate-400">
-                {formatDateVN(item.ngay)}
-              </div>
-            </div>
-          ))
+            )
+          })
         ) : (
-          <p className="py-6 text-center text-xs text-slate-400 italic">
-            Không tìm thấy đánh giá nào ở mức này.
+          <p className="py-6 text-center text-[12.5px] italic text-[#9a9d96]">
+            Không tìm thấy đánh giá nào ở mức lọc này.
           </p>
         )}
       </div>

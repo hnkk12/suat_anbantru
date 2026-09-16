@@ -1,12 +1,14 @@
 export default function StatCard({ label, value, unit, hint }) {
   return (
-    <div className="rounded-2xl border border-[#d9dad5] bg-white p-5 shadow-[0_2px_9px_rgba(31,40,37,0.045)] transition-all hover:-translate-y-0.5 hover:shadow-[0_5px_16px_rgba(31,40,37,0.07)]">
-      <p className="text-sm font-medium text-[#666a65]">{label}</p>
-      <p className="mt-2 text-2xl font-semibold tracking-tight text-[#20211f]">
-        {value}
-        {unit && <span className="ml-1 text-sm font-medium text-gray-400">{unit}</span>}
-      </p>
-      {hint && <p className="mt-1 text-xs text-gray-400">{hint}</p>}
+    <div className="flex min-h-[96px] flex-col justify-between rounded-[16px] border border-[#e3e4df] bg-white p-[18px] shadow-xs transition-all hover:border-[#cfd1cb]">
+      <span className="text-[12.5px] font-medium text-[#6b6f68]">{label}</span>
+      <div>
+        <div className="mt-1.5 flex items-baseline gap-1.5">
+          <span className="text-[21px] font-semibold tracking-[-0.02em] text-[#1c1d1b]">{value}</span>
+          {unit && <span className="text-[12px] font-medium text-[#9a9d96]">{unit}</span>}
+        </div>
+        {hint && <p className="mt-1 text-[11.5px] text-[#9a9d96]">{hint}</p>}
+      </div>
     </div>
   )
 }

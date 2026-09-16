@@ -1,32 +1,17 @@
-import { useState } from 'react'
-import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 export default function AppLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
-
   return (
-    <div className="flex h-screen flex-col overflow-hidden bg-[#fbfbf9] text-[#20211f] antialiased">
-      {/* Top Navbar: cố định ở đỉnh */}
-      <Navbar
-        onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
-        onToggleSidebarCollapse={() => setSidebarCollapsed((value) => !value)}
-        schoolName="bántrú"
-      />
+    <div className="flex h-screen overflow-hidden bg-[#fbfbf9] text-[#1c1d1b] font-sans antialiased tabular-nums">
+      {/* Sidebar with Hamburger button located inside its header */}
+      <Sidebar />
 
-      {/* Main Layout Container (Sidebar + Content) */}
-      <div className="flex min-h-0 flex-1 overflow-hidden">
-        {/* Sidebar Navigation */}
-        <Sidebar
-          isOpen={sidebarOpen}
-          onClose={() => setSidebarOpen(false)}
-          collapsed={sidebarCollapsed}
-        />
-
-        {/* Main Content Area: nhận nội dung linh hoạt qua children */}
-        <main className="min-w-0 flex-1 overflow-y-auto"><div className="mx-auto w-full max-w-[1440px] px-4 py-7 sm:px-7 lg:px-10 lg:py-9">{children}</div></main>
-      </div>
+      {/* Main Content Area exactly matching template */}
+      <main className="flex-1 overflow-y-auto min-w-0">
+        <div className="mx-auto max-w-[1180px] px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-11">
+          {children}
+        </div>
+      </main>
     </div>
   )
 }
