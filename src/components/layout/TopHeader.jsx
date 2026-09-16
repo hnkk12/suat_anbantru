@@ -90,10 +90,10 @@ export default function TopHeader({ onOpenMobile }) {
           </button>
         )}
         <div className="flex items-center gap-2 lg:hidden">
-          <div className="flex h-7 w-7 items-center justify-center rounded-[7px] bg-[#c84b26] text-[11px] font-bold text-white">
+          <div className="flex h-7 w-7 items-center justify-center rounded-[7px] bg-[#c84b26] text-[12px] font-bold tracking-[0.02em] text-white">
             BT
           </div>
-          <span className="text-[14px] font-semibold text-[#1c1d1b]">
+          <span className="text-[15px] font-semibold tracking-[-0.01em] text-[#1c1d1b]">
             Bán trú
           </span>
         </div>
