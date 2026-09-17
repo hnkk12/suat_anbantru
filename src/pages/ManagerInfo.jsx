@@ -91,59 +91,46 @@ export default function ManagerInfo() {
   ]
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '22px' }}>
-      {toast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-[12px] bg-[#c84b26] px-4 py-3 text-[13px] font-medium text-white shadow-xl animate-in fade-in-50">
-          <CheckCircle2 size={16} />
-          {toast}
-        </div>
-      )}
-
-      {/* Header exactly matching template */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'flex-end', justifyContent: 'space-between', gap: '16px' }}>
-        <div>
-          <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600, letterSpacing: '-0.02em', color: '#1c1d1b' }}>
-            Người phụ trách
-          </h1>
-          <p style={{ margin: '6px 0 0', fontSize: '13.5px', color: '#6b6f68', maxWidth: '480px' }}>
-            Thông tin người phụ trách công tác bán trú tại trường.
-          </p>
-        </div>
-        <Button onClick={openEditor} size="sm">
-          <Edit3 size={15} /> Cập nhật thông tin
-        </Button>
-      </div>
-
-      {/* Card exactly matching template: border: 1px solid #e3e4df; border-radius: 16px; background: #fff; padding: 24px; max-width: 520px; display: flex; flex-direction: column; gap: 16px */}
-      <div
-        style={{
-          border: '1px solid #e3e4df',
-          borderRadius: '16px',
-          background: '#fff',
-          padding: '24px',
-          maxWidth: '520px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: '16px',
-        }}
-      >
-        {managerFields.map((f, idx) => (
-          <div
-            key={f.label}
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              gap: '16px',
-              borderBottom: idx < managerFields.length - 1 ? '1px solid #f1f2ee' : 'none',
-              paddingBottom: idx < managerFields.length - 1 ? '12px' : 0,
-            }}
-          >
-            <span style={{ fontSize: '13px', color: '#9a9d96' }}>{f.label}</span>
-            <span style={{ fontSize: '13px', fontWeight: 500, textAlign: 'right', maxWidth: '280px', color: '#1c1d1b' }}>
-              {f.value || '—'}
-            </span>
+    <div className="my-auto flex w-full flex-1 flex-col items-center justify-center py-4">
+      <div className="flex w-full max-w-[560px] flex-col gap-6">
+        {toast && (
+          <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2 rounded-[12px] bg-[#c84b26] px-4 py-3 text-[13px] font-medium text-white shadow-xl animate-in fade-in-50">
+            <CheckCircle2 size={16} />
+            {toast}
           </div>
-        ))}
+        )}
+
+        {/* Header */}
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <h1 className="m-0 text-[24px] font-semibold tracking-[-0.02em] text-[#1c1d1b]">
+              Người phụ trách
+            </h1>
+            <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#6b6f68]">
+              Thông tin người phụ trách công tác bán trú tại trường.
+            </p>
+          </div>
+          <Button onClick={openEditor} size="sm">
+            <Edit3 size={15} /> Cập nhật thông tin
+          </Button>
+        </div>
+
+        {/* Card */}
+        <div className="flex w-full flex-col gap-4 rounded-[16px] border border-[#e3e4df] bg-white p-6 shadow-xs">
+          {managerFields.map((f, idx) => (
+            <div
+              key={f.label}
+              className={`flex items-center justify-between gap-4 ${
+                idx < managerFields.length - 1 ? 'border-b border-[#f1f2ee] pb-3.5' : ''
+              }`}
+            >
+              <span className="text-[13px] text-[#9a9d96]">{f.label}</span>
+              <span className="max-w-[340px] text-right text-[13.5px] font-medium text-[#1c1d1b]">
+                {f.value || '—'}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Edit Modal to retain full edit feature */}

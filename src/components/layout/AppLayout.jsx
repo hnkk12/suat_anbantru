@@ -19,8 +19,8 @@ export default function AppLayout({ children }) {
         <TopHeader onOpenMobile={() => setMobileOpen(true)} />
 
         {/* Scrollable Page Content */}
-        <main className="flex-1 overflow-y-auto min-w-0">
-          <div className="mx-auto max-w-[1180px] px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-11">
+        <main className="flex-1 overflow-y-auto min-w-0 flex flex-col">
+          <div className="mx-auto max-w-[1180px] w-full px-6 py-8 sm:px-10 sm:py-10 lg:px-12 lg:py-11 flex-1 flex flex-col">
             {children}
           </div>
         </main>
