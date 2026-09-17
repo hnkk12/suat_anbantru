@@ -87,9 +87,11 @@ export default function Navbar({ onToggleSidebar, onToggleSidebarCollapse }) {
           </button>
 
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="flex h-7 w-7 items-center justify-center rounded-[7px] bg-[#c84b26] text-[12px] font-bold tracking-[0.02em] text-white">
-              BT
-            </div>
+            <img
+              src="/logo.jpg"
+              alt="Logo Bán trú"
+              className="h-7 w-7 rounded-[7px] object-cover"
+            />
             <span className="text-[15px] font-semibold tracking-[-0.01em] text-[#1c1d1b]">
               Quản lý bán trú
             </span>

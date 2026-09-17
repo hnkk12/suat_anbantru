@@ -92,9 +92,11 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
     <header className="sticky top-0 z-30 border-b border-gray-200 bg-white">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 lg:px-6">
         <NavLink to="/" className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-teal-600 text-white">
-            <UtensilsCrossed size={18} />
-          </span>
+          <img
+            src="/logo.jpg"
+            alt="Logo"
+            className="h-9 w-9 rounded-lg object-cover"
+          />
           <span className="text-sm font-bold tracking-wide text-gray-900 sm:text-base">{schoolName}</span>
         </NavLink>
 

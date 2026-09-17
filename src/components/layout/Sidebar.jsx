@@ -119,23 +119,16 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div
+          <img
+            src="/logo.jpg"
+            alt="Logo Bán trú"
             style={{
               width: '28px',
               height: '28px',
               borderRadius: '7px',
-              background: '#c84b26',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#fff',
-              fontSize: '12px',
-              fontWeight: 700,
-              letterSpacing: '0.02em',
+              objectFit: 'cover',
             }}
-          >
-            BT
-          </div>
+          />
           <span
             style={{
               fontSize: '15px',
@@ -346,9 +339,13 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
         type="button"
         onClick={() => setCollapsed(false)}
         title="Bán trú"
-        className="mt-2.5 flex h-7 w-7 items-center justify-center rounded-[7px] bg-[#c84b26] text-[12px] font-bold text-white cursor-pointer"
+        className="mt-2.5 flex h-7 w-7 items-center justify-center overflow-hidden rounded-[7px] cursor-pointer"
       >
-        BT
+        <img
+          src="/logo.jpg"
+          alt="Logo Bán trú"
+          className="h-full w-full object-cover"
+        />
       </button>
 
       <div className="my-3 h-[1px] w-8 bg-[#eceeea]" />
