@@ -292,24 +292,18 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
             padding: 0,
           }}
         >
-          <div
+          <img
+            src="/logo.jpg"
+            alt="Admin Avatar"
             style={{
               width: '32px',
               height: '32px',
               borderRadius: '8px',
-              background: '#f0f1ec',
+              objectFit: 'cover',
               border: '1px solid #e3e4df',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#5d605a',
               flexShrink: 0,
             }}
-          >
-            AD
-          </div>
+          />
           <div style={{ minWidth: 0 }}>
             <p style={{ margin: 0, fontSize: '13px', fontWeight: 600, color: '#1c1d1b' }}>
               Admin
@@ -432,9 +426,13 @@ export default function Sidebar({ mobileOpen: externalMobileOpen, onMobileClose 
           type="button"
           onClick={() => setAccountOpen((v) => !v)}
           title="Admin - Quản trị viên"
-          className="flex h-8 w-8 items-center justify-center rounded-[8px] border border-[#e3e4df] bg-[#f0f1ec] text-[11px] font-bold text-[#5d605a] cursor-pointer"
+          className="flex h-8 w-8 items-center justify-center overflow-hidden rounded-[8px] border border-[#e3e4df] cursor-pointer"
         >
-          AD
+          <img
+            src="/logo.jpg"
+            alt="Admin Avatar"
+            className="h-full w-full object-cover"
+          />
         </button>
       </div>
     </div>

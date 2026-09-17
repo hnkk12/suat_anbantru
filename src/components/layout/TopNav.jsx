@@ -136,9 +136,13 @@ export default function TopNav({ schoolName = 'TRƯỜNG TEST - ADMIN' }) {
             <button
               type="button"
               onClick={() => setUserMenuOpen((o) => !o)}
-              className="rounded-lg border border-gray-200 p-2 text-gray-500 transition-colors hover:bg-gray-100"
+              className="flex h-9 w-9 items-center justify-center overflow-hidden rounded-lg border border-gray-200 p-0.5 text-gray-500 transition-colors hover:bg-gray-100"
             >
-              <UserCircle2 size={18} />
+              <img
+                src="/logo.jpg"
+                alt="Admin Avatar"
+                className="h-full w-full rounded-md object-cover"
+              />
             </button>
             {userMenuOpen && (
               <div className="absolute right-0 z-40 mt-1 w-56 overflow-hidden rounded-lg border border-gray-200 bg-white py-1 shadow-lg">
